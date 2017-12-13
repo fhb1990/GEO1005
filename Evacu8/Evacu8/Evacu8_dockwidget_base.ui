@@ -27,7 +27,7 @@ plugin content.</string>
     <item row="0" column="0">
      <widget class="QPushButton" name="pushButton">
       <property name="text">
-       <string>PushButton</string>
+       <string>Freek do not push this button!!</string>
       </property>
      </widget>
     </item>
