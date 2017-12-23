@@ -23,8 +23,9 @@
 
 import os
 
-from PyQt4 import QtGui, uic
+from PyQt4 import QtGui, QtCore, uic
 from PyQt4.QtCore import pyqtSignal
+from . import utility_functions as uf
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'Evacu8_dockwidget_base.ui'))
@@ -43,6 +44,26 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # http://qt-project.org/doc/qt-4.8/designer-using-a-ui-file.html
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
+
+        self.load_scen.clicked.connect(self.openScenario)
+
+
+    def openScenario(self,filename=""):
+        scenario_open = False
+        scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
+        # check if file exists
+        if os.path.isfile(scenario_file):
+            self.iface.addProject(scenario_file)
+            scenario_open = True
+        else:
+            last_dir = uf.getLastDir("data")
+            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+            if new_file:
+                self.iface.addProject(unicode(new_file))
+                scenario_open = True
+        if scenario_open:
+            self.updateLayers()
+
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
