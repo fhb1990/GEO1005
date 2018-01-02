@@ -25,10 +25,14 @@ import os
 
 from PyQt4 import QtGui, QtCore, uic
 from PyQt4.QtCore import pyqtSignal
+from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint
+from qgis.utils import iface
 from . import utility_functions as uf
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'Evacu8_dockwidget_base.ui'))
+
+
 
 
 class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
@@ -45,9 +49,18 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # #widgets-and-dialogs-with-auto-connect
         self.setupUi(self)
 
+        #define globals
+        self.iface = iface
+
+        # set up GUI operation signals
+        # data
         self.load_scen.clicked.connect(self.openScenario)
+        self.set_pt.clicked.connect(self.AttackPoint)
 
 
+    ##Functions##
+    #Data Functions#
+    #Open Scenario
     def openScenario(self,filename=""):
         scenario_open = False
         scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
@@ -61,11 +74,28 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             if new_file:
                 self.iface.addProject(unicode(new_file))
                 scenario_open = True
-        if scenario_open:
-            self.updateLayers()
+
+
+    def AttackPoint(self, event):
+        # Specify the geometry type
+        layer = QgsVectorLayer('Point?crs=epsg:28992', 'Attack Point', 'memory')
+
+        # Set the provider to accept the data source
+        prov = layer.dataProvider()
+        point = QgsPoint(85000, 447000)
+
+        # Add a new feature and assign the geometry
+        feat = QgsFeature()
+        feat.setGeometry(QgsGeometry.fromPoint(point))
+        prov.addFeatures([feat])
+
+        # Update extent of the layer
+        layer.updateExtents()
+
+        # Add the layer to the Layers panel
+        QgsMapLayerRegistry.instance().addMapLayers([layer])
 
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
-

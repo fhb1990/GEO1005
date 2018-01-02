@@ -708,3 +708,5 @@ class TimedEvent(QtCore.QThread):
     def stop(self):
         self.running = False
         self.exit()
+
+
