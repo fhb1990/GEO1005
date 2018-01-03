@@ -64,7 +64,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_rad.clicked.connect(self.calculateBuffer)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
+        self.set_danger.clicked.connect(self.DangerZone)
 
+        # analysis
+        self.selectBufferButton.clicked.connect(self.POI_selection)
 
     def closeEvent(self, event):
         # disconnect interface signals
@@ -97,6 +100,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         if scenario_open:
             self.updateLayers()
 
+
     # Data Functions#
     def updateLayers(self):
         layers = uf.getLegendLayers(self.iface, 'all', 'all')
@@ -108,7 +112,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             self.selectAttributeCombo.clear()
             self.clearChart()
-
 
     def setSelectedLayer(self):
         layer_name = self.selectLayerCombo.currentText()
@@ -131,7 +134,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.setSelectedAttribute()
                 # send list to the report list window
                 self.updateReport(fields)
-
 
     def setSelectedAttribute(self):
         field_name = self.selectAttributeCombo.currentText()
@@ -160,7 +162,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Add the layer to the Layers panel
         QgsMapLayerRegistry.instance().addMapLayers([layer])
 
-    # buffer functions
+
+
+    # buffer functions#
     def getBufferCutoff(self):
         buffer = self.buff_area.text()
         if uf.isNumeric(buffer):
@@ -197,9 +201,71 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
+
+    #Set danger polygon#
+    def DangerZone(self):
+        # Specify the geometry type
+        layer = QgsVectorLayer('Polygon?crs=epsg:28992', 'Danger Zone', "memory")
+
+        # Set the provider to accept the data source
+        pr = layer.dataProvider()
+        poly = QgsGeometry.fromPolygon(
+            [[QgsPoint(84900, 446900), QgsPoint(84900, 447100), QgsPoint(85100, 447100), QgsPoint(85100, 446900)]])
+
+        # Add a new feature and assign the geometry
+        feat = QgsFeature()
+        feat.setGeometry(poly)
+        pr.addFeatures([feat])
+
+        # Update extent of the layer
+        layer.updateExtents()
+
+        # Add the layer to the Layers panel
+        QgsMapLayerRegistry.instance().addMapLayers([layer])
+
+
+
+    #POI selection#
+    def POI_selection(self):
+        layer = self.getSelectedLayer()
+        buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+        if buffer_layer and layer:
+            points = uf.getFeaturesIntersections(layer, buffer_layer)
+            new_layer = QgsVectorLayer('Point?crs=epsg:28992', 'POIs in', 'memory')
+            prov = new_layer.dataProvider()
+            for point in points:
+                feat = QgsFeature()
+                feat.setGeometry(point)
+                prov.addFeatures([feat])
+            new_layer.updateExtents()
+            QgsMapLayerRegistry.instance().addMapLayers([new_layer])
+
+            points2 = uf.getFeaturesDifference(layer, buffer_layer)
+            new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', 'POIs out', 'memory')
+            prov2 = new_layer2.dataProvider()
+            for point in points2:
+                feat = QgsFeature()
+                feat.setGeometry(point)
+                prov2.addFeatures([feat])
+            new_layer2.updateExtents()
+            QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
+
+
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
         if self.canvas.isCachingEnabled():
             layer.setCacheImage(None)
         else:
             self.canvas.refresh()
+
+
+    # report window functions
+    def updateReport(self,report):
+        self.reportList.clear()
+        self.reportList.addItems(report)
+
+    def insertReport(self,item):
+        self.reportList.insertItem(0, item)
+
+    def clearReport(self):
+        self.reportList.clear()

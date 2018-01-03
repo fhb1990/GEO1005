@@ -468,6 +468,21 @@ def getFeaturesIntersections(base_layer, intersect_layer):
     return intersections
 
 
+def getFeaturesDifference(base_layer, intersect_layer):
+    differences = []
+    # retrieve objects to be intersected (list comprehension, more pythonic)
+    obstacles_geom = [QgsGeometry(feat.geometry()) for feat in intersect_layer.getFeatures()]
+    # retrieve base layer objects
+    base = base_layer.getFeatures()
+    # loop through base features and intersecting elements
+    for feat in base:
+        base_geom = QgsGeometry(feat.geometry())
+        for obst in obstacles_geom:
+            if base_geom.difference(obst):
+                differences.append(base_geom.difference(obst))
+    return differences
+
+
 #
 # Canvas functions
 #

@@ -15,6 +15,13 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="10" column="0">
+     <widget class="QPushButton" name="selectBufferButton">
+      <property name="text">
+       <string>POI selection (selectBufferButton)</string>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0">
      <widget class="QPushButton" name="load_scen">
       <property name="text">
@@ -31,7 +38,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Set radius (set_rad)</string>
+       <string>Create buffer (set_rad)</string>
       </property>
       <property name="iconSize">
        <size>
@@ -81,19 +88,19 @@
     <item row="2" column="0">
      <widget class="QLabel" name="selectLayerLabel">
       <property name="text">
-       <string>Select layer:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="selectAttributeLabel_2">
-      <property name="text">
-       <string>Select attribute:</string>
+       <string>Select current layer:</string>
       </property>
      </widget>
     </item>
     <item row="3" column="0">
      <widget class="QComboBox" name="selectLayerCombo"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="selectAttributeLabel_2">
+      <property name="text">
+       <string>Select attribute (not working for now):</string>
+      </property>
+     </widget>
     </item>
     <item row="5" column="0">
      <widget class="QComboBox" name="selectAttributeCombo"/>
