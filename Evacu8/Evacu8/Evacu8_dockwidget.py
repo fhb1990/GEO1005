@@ -26,7 +26,8 @@ import os.path
 
 from PyQt4 import QtGui, QtCore, uic
 from PyQt4.QtCore import pyqtSignal
-from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint
+from PyQt4.QtGui import QColor
+from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex
 from qgis._gui import QgsMapToolEmitPoint
 from qgis.utils import iface
 
@@ -78,6 +79,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.selectBufferButton.clicked.connect(self.POI_selection)
         self.shortestRouteButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
+        self.select_POI.clicked.connect(self.evacWhich)
         self.tied_points = []
 
     def closeEvent(self, event):
@@ -170,6 +172,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Specify the geometry type
             layer = QgsVectorLayer('Point?crs=epsg:28992', 'Attack Point', 'memory')
 
+            symbols = layer.rendererV2().symbols()
+            symbol = symbols[0]
+            symbol.setSize(5)
+            symbol.setColor(QColor.fromRgb(50, 50, 250))
+
             # Set the provider to accept the data source
             prov = layer.dataProvider()
 
@@ -195,8 +202,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             return 0
 
     def calculateBuffer(self):
-        origins = self.getSelectedLayer().selectedFeatures()
-        layer = self.getSelectedLayer()
+        layer = uf.getLegendLayerByName(self.iface, "Attack Point")
+        origins = layer.getFeatures()
+        #origins = self.getSelectedLayer().selectedFeatures()
+        #layer = self.getSelectedLayer()
         if origins > 0:
             cutoff_distance = self.getBufferCutoff()
             buffers = {}
@@ -209,7 +218,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not buffer_layer:
                 attribs = ['id', 'distance']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double]
-                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 50)
+                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 30)
                 uf.loadTempLayer(buffer_layer)
                 buffer_layer.setLayerName('Buffers')
             # insert buffer polygons
@@ -274,6 +283,28 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
 
+    # picking
+    def evacWhich(self):
+        lineLayer = uf.getLegendLayerByName(iface, "road_net")
+        provider = lineLayer.dataProvider()
+
+        spIndex = QgsSpatialIndex()  # create spatial index object
+
+        feat = QgsFeature()
+        fit = provider.getFeatures()  # gets all features in layer
+
+        # insert features to index
+        while fit.nextFeature(feat):
+            spIndex.insertFeature(feat)
+
+        pt = QgsPoint(91000, 437000)
+
+        # QgsSpatialIndex.nearestNeighbor (QgsPoint point, int neighbors)
+        nearestIds = spIndex.nearestNeighbor(pt, 1)  # we need only one neighbour
+        featureId = nearestIds[0]
+        lineLayer.select(featureId)
+
+
     # route functions
     def getNetwork(self):
         roads_layer = self.getSelectedLayer()
@@ -325,6 +356,12 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 types = [QtCore.QVariant.String]
                 routes_layer = uf.createTempLayer('Routes', 'LINESTRING', self.network_layer.crs().postgisSrid(),
                                                   attribs, types)
+
+                symbols = routes_layer.rendererV2().symbols()
+                symbol = symbols[0]
+                symbol.setWidth(1.5)
+                symbol.setColor(QColor.fromRgb(250,50,50))
+
                 uf.loadTempLayer(routes_layer)
             # insert route line
             for route in routes_layer.getFeatures():
