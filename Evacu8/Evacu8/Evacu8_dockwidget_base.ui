@@ -15,17 +15,60 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="10" column="0">
-     <widget class="QPushButton" name="selectBufferButton">
+    <item row="5" column="0">
+     <widget class="QComboBox" name="selectAttributeCombo"/>
+    </item>
+    <item row="4" column="0">
+     <widget class="QLabel" name="selectAttributeLabel_2">
       <property name="text">
-       <string>POI selection (selectBufferButton)</string>
+       <string>Select attribute (not working for now):</string>
       </property>
      </widget>
     </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="load_scen">
+    <item row="3" column="0">
+     <widget class="QComboBox" name="selectLayerCombo"/>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="selectLayerLabel">
       <property name="text">
-       <string>Load scenario (load_scen)</string>
+       <string>Select current layer:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="selectAttributeLabel">
+      <property name="text">
+       <string>Perimeter radius in meters:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLineEdit" name="buff_area">
+      <property name="text">
+       <string>(buff_area)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QPushButton" name="set_pt">
+      <property name="text">
+       <string>Set the point of the attack (set_pt)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QPushButton" name="set_danger">
+      <property name="mouseTracking">
+       <bool>true</bool>
+      </property>
+      <property name="text">
+       <string>Set danger zone (set_danger)</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
       </property>
      </widget>
     </item>
@@ -48,62 +91,40 @@
       </property>
      </widget>
     </item>
-    <item row="9" column="0">
-     <widget class="QPushButton" name="set_danger">
-      <property name="mouseTracking">
-       <bool>true</bool>
-      </property>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="load_scen">
       <property name="text">
-       <string>Ser danger zone (set_danger)</string>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>50</width>
-        <height>50</height>
-       </size>
+       <string>Load scenario (load_scen)</string>
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QPushButton" name="set_pt">
+    <item row="10" column="0">
+     <widget class="QPushButton" name="selectBufferButton">
       <property name="text">
-       <string>Set the point of the attack (set_pt)</string>
+       <string>POIs in/out creation (selectBufferButton)</string>
       </property>
      </widget>
     </item>
-    <item row="7" column="0">
-     <widget class="QLineEdit" name="buff_area">
+    <item row="11" column="0">
+     <widget class="QPushButton" name="select_POI">
       <property name="text">
-       <string>(buff_area)</string>
+       <string>Select building to evacuate (select_POI)</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="selectAttributeLabel">
+    <item row="13" column="0">
+     <widget class="QPushButton" name="shortestRouteButton">
       <property name="text">
-       <string>Perimeter radius in meters:</string>
+       <string>Shortest Route (shortestRouteButton)</string>
       </property>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="selectLayerLabel">
+    <item row="12" column="0">
+     <widget class="QPushButton" name="select_shelter">
       <property name="text">
-       <string>Select current layer:</string>
+       <string>Select shelter (select_shelter)</string>
       </property>
      </widget>
-    </item>
-    <item row="3" column="0">
-     <widget class="QComboBox" name="selectLayerCombo"/>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="selectAttributeLabel_2">
-      <property name="text">
-       <string>Select attribute (not working for now):</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QComboBox" name="selectAttributeCombo"/>
     </item>
    </layout>
   </widget>

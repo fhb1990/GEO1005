@@ -714,7 +714,7 @@ def createIndex(layer):
 #------------------------------
 # Layer creation functions
 #------------------------------
-def createTempLayer(name, geometry, srid, attributes, types):
+def createTempLayer(name, geometry, srid, attributes, types, transparency=0):
     #geometry can be 'POINT', 'LINESTRING' or 'POLYGON' or the 'MULTI' version of the previous
     vlayer = QgsVectorLayer('%s?crs=EPSG:%s'% (geometry, srid), name, "memory")
     provider = vlayer.dataProvider()
@@ -730,6 +730,7 @@ def createTempLayer(name, geometry, srid, attributes, types):
         except:
             return None
         vlayer.commitChanges()
+    vlayer.setLayerTransparency(transparency)
     return vlayer
 
 

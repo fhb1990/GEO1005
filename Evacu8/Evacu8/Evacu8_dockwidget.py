@@ -29,6 +29,10 @@ from PyQt4.QtCore import pyqtSignal
 from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint
 from qgis._gui import QgsMapToolEmitPoint
 from qgis.utils import iface
+
+import random
+import processing
+
 from . import utility_functions as uf
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -72,6 +76,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # analysis
         self.selectBufferButton.clicked.connect(self.POI_selection)
+        self.shortestRouteButton.clicked.connect(self.buildNetwork)
+        self.shortestRouteButton.clicked.connect(self.calculateRoute)
+        self.tied_points = []
 
     def closeEvent(self, event):
         # disconnect interface signals
@@ -202,7 +209,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not buffer_layer:
                 attribs = ['id', 'distance']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double]
-                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types)
+                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 50)
                 uf.loadTempLayer(buffer_layer)
                 buffer_layer.setLayerName('Buffers')
             # insert buffer polygons
@@ -264,6 +271,66 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 prov2.addFeatures([feat])
             new_layer2.updateExtents()
             QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
+
+
+
+    # route functions
+    def getNetwork(self):
+        roads_layer = self.getSelectedLayer()
+        if roads_layer:
+            # see if there is an obstacles layer to subtract roads from the network
+            obstacles_layer = uf.getLegendLayerByName(self.iface, "Obstacles")
+            if obstacles_layer:
+                # retrieve roads outside obstacles (inside = False)
+                features = uf.getFeaturesByIntersection(roads_layer, obstacles_layer, False)
+                # add these roads to a new temporary layer
+                road_network = uf.createTempLayer('Temp_Network','LINESTRING',roads_layer.crs().postgisSrid(),[],[])
+                road_network.dataProvider().addFeatures(features)
+            else:
+                road_network = roads_layer
+            return road_network
+        else:
+            return
+
+    def buildNetwork(self):
+        self.network_layer = self.getNetwork()
+        if self.network_layer:
+            # get the points to be used as origin and destination
+            # in this case gets the centroid of the selected features
+            selected_sources = self.getSelectedLayer().selectedFeatures()
+            source_points = [feature.geometry().centroid().asPoint() for feature in selected_sources]
+            # build the graph including these points
+            if len(source_points) > 1:
+                self.graph, self.tied_points = uf.makeUndirectedGraph(self.network_layer, source_points)
+                # the tied points are the new source_points on the graph
+                if self.graph and self.tied_points:
+                    text = "network is built for %s points" % len(self.tied_points)
+                    self.insertReport(text)
+        return
+
+    def calculateRoute(self):
+        # origin and destination must be in the set of tied_points
+        options = len(self.tied_points)
+        if options > 1:
+            # origin and destination are given as an index in the tied_points list
+            origin = 0
+            destination = random.randint(1, options - 1)
+            # calculate the shortest path for the given origin and destination
+            path = uf.calculateRouteDijkstra(self.graph, self.tied_points, origin, destination)
+            # store the route results in temporary layer called "Routes"
+            routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
+            # create one if it doesn't exist
+            if not routes_layer:
+                attribs = ['id']
+                types = [QtCore.QVariant.String]
+                routes_layer = uf.createTempLayer('Routes', 'LINESTRING', self.network_layer.crs().postgisSrid(),
+                                                  attribs, types)
+                uf.loadTempLayer(routes_layer)
+            # insert route line
+            for route in routes_layer.getFeatures():
+                print route.id()
+            uf.insertTempFeatures(routes_layer, [path], [['testing', 100.00]])
+            # self.refreshCanvas(routes_layer)
 
 
     # after adding features to layers needs a refresh (sometimes)
