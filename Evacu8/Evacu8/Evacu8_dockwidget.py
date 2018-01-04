@@ -22,10 +22,12 @@
 """
 
 import os
+import os.path
 
 from PyQt4 import QtGui, QtCore, uic
 from PyQt4.QtCore import pyqtSignal
 from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint
+from qgis._gui import QgsMapToolEmitPoint
 from qgis.utils import iface
 from . import utility_functions as uf
 
@@ -52,6 +54,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         #define globals
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
+        self.emitPoint = QgsMapToolEmitPoint(self.canvas)
 
         # set up GUI operation signals
         # data
@@ -60,7 +63,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface.legendInterface().itemRemoved.connect(self.updateLayers)
         self.iface.legendInterface().itemAdded.connect(self.updateLayers)
         self.load_scen.clicked.connect(self.openScenario)
-        self.set_pt.clicked.connect(self.AttackPoint)
+        self.set_pt.clicked.connect(self.enterPoi)
+        self.emitPoint.canvasClicked.connect(self.getPoint)
         self.set_rad.clicked.connect(self.calculateBuffer)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
@@ -143,24 +147,35 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         field_name = self.selectAttributeCombo.currentText()
         return field_name
 
-    def AttackPoint(self, event):
-        # Specify the geometry type
-        layer = QgsVectorLayer('Point?crs=epsg:28992', 'Attack Point', 'memory')
+    # Attack Point
+    def enterPoi(self):
+        # remember currently selected tool
+        self.userTool = self.canvas.mapTool()
+        # activate coordinate capture tool
+        self.canvas.setMapTool(self.emitPoint)
 
-        # Set the provider to accept the data source
-        prov = layer.dataProvider()
-        point = QgsPoint(85000, 447000)
+    def getPoint(self, mapPoint, mouseButton):
+        # change tool so you don't get more than one POI
+        self.canvas.unsetMapTool(self.emitPoint)
+        self.canvas.setMapTool(self.userTool)
+        # Get the click
+        if mapPoint:
+            # Specify the geometry type
+            layer = QgsVectorLayer('Point?crs=epsg:28992', 'Attack Point', 'memory')
 
-        # Add a new feature and assign the geometry
-        feat = QgsFeature()
-        feat.setGeometry(QgsGeometry.fromPoint(point))
-        prov.addFeatures([feat])
+            # Set the provider to accept the data source
+            prov = layer.dataProvider()
 
-        # Update extent of the layer
-        layer.updateExtents()
+            # Add a new feature and assign the geometry
+            feat = QgsFeature()
+            feat.setGeometry(QgsGeometry.fromPoint(mapPoint))
+            prov.addFeatures([feat])
 
-        # Add the layer to the Layers panel
-        QgsMapLayerRegistry.instance().addMapLayers([layer])
+            # Update extent of the layer
+            layer.updateExtents()
+
+            # Add the layer to the Layers panel
+            QgsMapLayerRegistry.instance().addMapLayers([layer])
 
 
 
