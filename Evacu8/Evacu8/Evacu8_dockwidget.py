@@ -413,6 +413,13 @@ class PolyMapTool(QgsMapToolEmitPoint):
 
         # Update extent of the layer
         self.layer.updateExtents()
-
+        self.refreshCanvas(self.layer)
+        
         # Add the layer to the Layers panel
         QgsMapLayerRegistry.instance().addMapLayers([self.layer])
+
+    def refreshCanvas(self, layer):
+        if self.canvas.isCachingEnabled():
+            layer.setCacheImage(None)
+        else:
+            self.canvas.refresh()
