@@ -27,8 +27,8 @@ import os.path
 from PyQt4 import QtGui, QtCore, uic
 from PyQt4.QtCore import pyqtSignal
 from PyQt4.QtGui import QColor
-from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex
-from qgis._gui import QgsMapToolEmitPoint
+from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis
+from qgis._gui import QgsMapToolEmitPoint, QgsRubberBand, QgsVertexMarker
 from qgis.utils import iface
 
 import random
@@ -60,6 +60,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
         self.emitPoint = QgsMapToolEmitPoint(self.canvas)
+        self.toolPoly = PolyMapTool(self.canvas)
 
         # set up GUI operation signals
         # data
@@ -235,6 +236,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #Set danger polygon#
     def DangerZone(self):
+        self.canvas.setMapTool(self.toolPoly)
+
         # Specify the geometry type
         layer = QgsVectorLayer('Polygon?crs=epsg:28992', 'Danger Zone', "memory")
 
@@ -388,3 +391,34 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def clearReport(self):
         self.reportList.clear()
+
+
+class PolyMapTool(QgsMapToolEmitPoint):
+
+    def __init__(self, canvas):
+        self.canvas = canvas
+        QgsMapToolEmitPoint.__init__(self, self.canvas)
+        self.rubberband = QgsRubberBand(self.canvas, QGis.Polygon)
+        self.rubberband.setColor(QColor(255,0,0))
+        self.rubberband.setWidth(1)
+        self.point = None
+        self.points = []
+
+    def canvasPressEvent(self, e):
+        self.point = self.toMapCoordinates(e.pos())
+        m = QgsVertexMarker(self.canvas)
+        m.setCenter(self.point)
+        m.setColor(QColor(0,255,0))
+        m.setIconSize(5)
+        m.setIconType(QgsVertexMarker.ICON_BOX)
+        m.setPenWidth(3)
+        self.points.append(self.point)
+        self.isEmittingPoint = True
+        self.showPoly()
+
+    def showPoly(self):
+        self.rubberband.reset(QGis.Polygon)
+        for point in self.points[:-1]:
+            self.rubberband.addPoint(point, False)
+        self.rubberband.addPoint(self.points[-1], True)
+        self.rubberband.show()
