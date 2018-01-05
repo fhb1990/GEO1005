@@ -14,22 +14,10 @@
       <file leaf-file-name="Evacu8_dockwidget.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Evacu8_dockwidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="391">
-              <caret line="417" column="0" lean-forward="true" selection-start-line="417" selection-start-column="0" selection-end-line="417" selection-end-column="0" />
+            <state relative-caret-position="392">
+              <caret line="422" column="0" lean-forward="true" selection-start-line="422" selection-start-column="0" selection-end-line="422" selection-end-column="0" />
               <folding>
                 <element signature="e#24#1129#1" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="utility_functions.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/utility_functions.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7548">
-              <caret line="452" column="21" lean-forward="false" selection-start-line="452" selection-start-column="15" selection-end-line="452" selection-end-column="21" />
-              <folding>
-                <element signature="e#1170#1201#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -81,7 +69,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="440" />
+    <option name="x" value="-12" />
+    <option name="y" value="5" />
     <option name="width" value="1161" />
     <option name="height" value="912" />
   </component>
@@ -101,7 +90,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -113,7 +102,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -188,7 +177,7 @@
         <state relative-caret-position="7548">
           <caret line="452" column="21" lean-forward="false" selection-start-line="452" selection-start-column="15" selection-end-line="452" selection-end-column="21" />
           <folding>
-            <element signature="e#1170#1201#0" expanded="true" />
+            <element signature="e#1170#1201#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -208,7 +197,7 @@
         <state relative-caret-position="7684">
           <caret line="452" column="21" lean-forward="false" selection-start-line="452" selection-start-column="15" selection-end-line="452" selection-end-column="21" />
           <folding>
-            <element signature="e#1170#1201#0" expanded="true" />
+            <element signature="e#1170#1201#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -228,7 +217,7 @@
         <state relative-caret-position="15204">
           <caret line="732" column="45" lean-forward="false" selection-start-line="732" selection-start-column="45" selection-end-line="732" selection-end-column="45" />
           <folding>
-            <element signature="e#1170#1201#0" expanded="true" />
+            <element signature="e#1170#1201#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -288,7 +277,7 @@
         <state relative-caret-position="3536">
           <caret line="216" column="13" lean-forward="false" selection-start-line="216" selection-start-column="4" selection-end-line="216" selection-end-column="13" />
           <folding>
-            <element signature="e#1170#1201#0" expanded="true" />
+            <element signature="e#1170#1201#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -606,18 +595,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/utility_functions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7548">
+        <state relative-caret-position="17">
           <caret line="452" column="21" lean-forward="false" selection-start-line="452" selection-start-column="15" selection-end-line="452" selection-end-column="21" />
           <folding>
-            <element signature="e#1170#1201#0" expanded="true" />
+            <element signature="e#1170#1201#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Evacu8_dockwidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="417" column="0" lean-forward="true" selection-start-line="417" selection-start-column="0" selection-end-line="417" selection-end-column="0" />
+        <state relative-caret-position="392">
+          <caret line="422" column="0" lean-forward="true" selection-start-line="422" selection-start-column="0" selection-end-line="422" selection-end-column="0" />
           <folding>
             <element signature="e#24#1129#1" expanded="false" />
           </folding>

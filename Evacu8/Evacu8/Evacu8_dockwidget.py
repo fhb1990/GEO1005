@@ -238,26 +238,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     def DangerZone(self):
         self.canvas.setMapTool(self.toolPoly)
 
-        # Specify the geometry type
-        layer = QgsVectorLayer('Polygon?crs=epsg:28992', 'Danger Zone', "memory")
-
-        # Set the provider to accept the data source
-        pr = layer.dataProvider()
-        poly = QgsGeometry.fromPolygon(
-            [[QgsPoint(84900, 446900), QgsPoint(84900, 447100), QgsPoint(85100, 447100), QgsPoint(85100, 446900)]])
-
-        # Add a new feature and assign the geometry
-        feat = QgsFeature()
-        feat.setGeometry(poly)
-        pr.addFeatures([feat])
-
-        # Update extent of the layer
-        layer.updateExtents()
-
-        # Add the layer to the Layers panel
-        QgsMapLayerRegistry.instance().addMapLayers([layer])
-
-
 
     #POI selection#
     def POI_selection(self):
@@ -399,10 +379,11 @@ class PolyMapTool(QgsMapToolEmitPoint):
         self.canvas = canvas
         QgsMapToolEmitPoint.__init__(self, self.canvas)
         self.rubberband = QgsRubberBand(self.canvas, QGis.Polygon)
-        self.rubberband.setColor(QColor(255,0,0))
+        self.rubberband.setColor(QColor(0,0,0))
         self.rubberband.setWidth(1)
         self.point = None
         self.points = []
+        self.layer = QgsVectorLayer('Polygon?crs=epsg:28992', 'Danger Zone', "memory")
 
     def canvasPressEvent(self, e):
         self.point = self.toMapCoordinates(e.pos())
@@ -413,7 +394,6 @@ class PolyMapTool(QgsMapToolEmitPoint):
         m.setIconType(QgsVertexMarker.ICON_BOX)
         m.setPenWidth(3)
         self.points.append(self.point)
-        self.isEmittingPoint = True
         self.showPoly()
 
     def showPoly(self):
@@ -422,3 +402,27 @@ class PolyMapTool(QgsMapToolEmitPoint):
             self.rubberband.addPoint(point, False)
         self.rubberband.addPoint(self.points[-1], True)
         self.rubberband.show()
+        if len(self.points) == 4:
+            self.poly()
+            self.rubberband = QgsRubberBand(self.canvas, QGis.Polygon)
+            self.rubberband.setColor(QColor(0, 0, 0))
+            self.rubberband.setWidth(1)
+            self.point = None
+            self.points = []
+
+    def poly(self):
+        geom = self.rubberband.asGeometry()
+
+        # Set the provider to accept the data source
+        pr = self.layer.dataProvider()
+
+        # Add a new feature and assign the geometry
+        feat = QgsFeature()
+        feat.setGeometry(geom)
+        pr.addFeatures([feat])
+
+        # Update extent of the layer
+        self.layer.updateExtents()
+
+        # Add the layer to the Layers panel
+        QgsMapLayerRegistry.instance().addMapLayers([self.layer])
