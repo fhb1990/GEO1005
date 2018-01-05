@@ -379,7 +379,6 @@ class PolyMapTool(QgsMapToolEmitPoint):
         self.canvas = canvas
         QgsMapToolEmitPoint.__init__(self, self.canvas)
         self.rubberband = QgsRubberBand(self.canvas, QGis.Polygon)
-        self.rubberband.setColor(QColor(0,0,0))
         self.rubberband.setWidth(1)
         self.point = None
         self.points = []
@@ -387,12 +386,6 @@ class PolyMapTool(QgsMapToolEmitPoint):
 
     def canvasPressEvent(self, e):
         self.point = self.toMapCoordinates(e.pos())
-        m = QgsVertexMarker(self.canvas)
-        m.setCenter(self.point)
-        m.setColor(QColor(0,255,0))
-        m.setIconSize(5)
-        m.setIconType(QgsVertexMarker.ICON_BOX)
-        m.setPenWidth(3)
         self.points.append(self.point)
         self.showPoly()
 
@@ -404,9 +397,6 @@ class PolyMapTool(QgsMapToolEmitPoint):
         self.rubberband.show()
         if len(self.points) == 4:
             self.poly()
-            self.rubberband = QgsRubberBand(self.canvas, QGis.Polygon)
-            self.rubberband.setColor(QColor(0, 0, 0))
-            self.rubberband.setWidth(1)
             self.point = None
             self.points = []
 
