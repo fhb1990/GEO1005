@@ -74,7 +74,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_rad.clicked.connect(self.calculateBuffer)
         self.selectLayerCombo.activated.connect(self.setSelectedLayer)
         self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
-        self.set_danger.clicked.connect(self.DangerZone)
+        self.set_danger.clicked.connect(self.setDangerZone)
+        self.get_danger.clicked.connect(self.getDangerZone)
 
         # analysis
         self.selectBufferButton.clicked.connect(self.POI_selection)
@@ -235,8 +236,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     #Set danger polygon#
-    def DangerZone(self):
+    def setDangerZone(self):
         self.canvas.setMapTool(self.toolPoly)
+
+    def getDangerZone(self):
+        self.canvas.unsetMapTool(self.toolPoly)
 
 
     #POI selection#
