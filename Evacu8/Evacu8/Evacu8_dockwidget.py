@@ -248,72 +248,34 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #POI selection#
     def POI_selection(self):
-        layer = uf.getLegendLayerByName(self.iface, "Schools points")
+        init_layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+        layers_in = ['Schools in', 'Hospitals in', 'Nursery Homes in']
+        layers_out = ['Schools out', 'Hospitals out', 'Nursery Homes out']
+
         buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
-        if buffer_layer and layer:
-            points = uf.getFeaturesIntersections(layer, buffer_layer)
-            new_layer = QgsVectorLayer('Point?crs=epsg:28992', 'Schools in', 'memory')
-            prov = new_layer.dataProvider()
-            for point in points:
-                feat = QgsFeature()
-                feat.setGeometry(point)
-                prov.addFeatures([feat])
-            new_layer.updateExtents()
-            QgsMapLayerRegistry.instance().addMapLayers([new_layer])
 
-            points2 = uf.getFeaturesDifference(layer, buffer_layer)
-            new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', 'Schools out', 'memory')
-            prov2 = new_layer2.dataProvider()
-            for point in points2:
-                feat = QgsFeature()
-                feat.setGeometry(point)
-                prov2.addFeatures([feat])
-            new_layer2.updateExtents()
-            QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
+        for init_layer, layer_in, layer_out in zip(init_layers, layers_in, layers_out):
+            layer = uf.getLegendLayerByName(self.iface, init_layer)
+            if buffer_layer and layer:
+                points = uf.getFeaturesIntersections(layer, buffer_layer)
+                new_layer = QgsVectorLayer('Point?crs=epsg:28992', layer_in, 'memory')
+                prov = new_layer.dataProvider()
+                for point in points:
+                    feat = QgsFeature()
+                    feat.setGeometry(point)
+                    prov.addFeatures([feat])
+                new_layer.updateExtents()
+                QgsMapLayerRegistry.instance().addMapLayers([new_layer])
 
-        layer = uf.getLegendLayerByName(self.iface, "Hospitals points")
-        if buffer_layer and layer:
-            points = uf.getFeaturesIntersections(layer, buffer_layer)
-            new_layer = QgsVectorLayer('Point?crs=epsg:28992', 'Hospitals in', 'memory')
-            prov = new_layer.dataProvider()
-            for point in points:
-                feat = QgsFeature()
-                feat.setGeometry(point)
-                prov.addFeatures([feat])
-            new_layer.updateExtents()
-            QgsMapLayerRegistry.instance().addMapLayers([new_layer])
-
-            points2 = uf.getFeaturesDifference(layer, buffer_layer)
-            new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', 'Hospitals out', 'memory')
-            prov2 = new_layer2.dataProvider()
-            for point in points2:
-                feat = QgsFeature()
-                feat.setGeometry(point)
-                prov2.addFeatures([feat])
-            new_layer2.updateExtents()
-            QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
-
-        layer = uf.getLegendLayerByName(self.iface, "Nursery Homes points")
-        if buffer_layer and layer:
-            points = uf.getFeaturesIntersections(layer, buffer_layer)
-            new_layer = QgsVectorLayer('Point?crs=epsg:28992', 'Nursery Homes in', 'memory')
-            prov = new_layer.dataProvider()
-            for point in points:
-                feat = QgsFeature()
-                feat.setGeometry(point)
-                prov.addFeatures([feat])
-            new_layer.updateExtents()
-            QgsMapLayerRegistry.instance().addMapLayers([new_layer])
-
-            points2 = uf.getFeaturesDifference(layer, buffer_layer)
-            new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', 'Nursery Homes out', 'memory')
-            prov2 = new_layer2.dataProvider()
-            for point in points2:
-                feat = QgsFeature()
-                feat.setGeometry(point)
-                prov2.addFeatures([feat])
-            new_layer2.updateExtents()
-            QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
+                points2 = uf.getFeaturesDifference(layer, buffer_layer)
+                new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', layer_out, 'memory')
+                prov2 = new_layer2.dataProvider()
+                for point in points2:
+                    feat = QgsFeature()
+                    feat.setGeometry(point)
+                    prov2.addFeatures([feat])
+                new_layer2.updateExtents()
+                QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
 
 
     # picking
