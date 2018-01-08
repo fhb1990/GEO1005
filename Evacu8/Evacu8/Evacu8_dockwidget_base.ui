@@ -15,40 +15,7 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="8" column="0">
-     <widget class="QPushButton" name="set_rad">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="text">
-       <string>Create buffer (set_rad)</string>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>64</width>
-        <height>64</height>
-       </size>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QPushButton" name="load_scen">
-      <property name="text">
-       <string>Load scenario (load_scen)</string>
-      </property>
-     </widget>
-    </item>
     <item row="12" column="0">
-     <widget class="QPushButton" name="select_POI">
-      <property name="text">
-       <string>Select building to evacuate (select_POI)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="13" column="0">
      <widget class="QPushButton" name="select_shelter">
       <property name="text">
        <string>Select shelter (select_shelter)</string>
@@ -74,17 +41,10 @@
       </property>
      </widget>
     </item>
-    <item row="6" column="0">
-     <widget class="QLabel" name="selectAttributeLabel">
+    <item row="11" column="0">
+     <widget class="QPushButton" name="select_POI">
       <property name="text">
-       <string>Perimeter radius in meters:</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="selectLayerLabel">
-      <property name="text">
-       <string>Select current layer:</string>
+       <string>Select building to evacuate (select_POI)</string>
       </property>
      </widget>
     </item>
@@ -95,6 +55,20 @@
       </property>
      </widget>
     </item>
+    <item row="13" column="0">
+     <widget class="QPushButton" name="shortestRouteButton">
+      <property name="text">
+       <string>Shortest Route (shortestRouteButton)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QPushButton" name="load_scen">
+      <property name="text">
+       <string>Load scenario (load_scen)</string>
+      </property>
+     </widget>
+    </item>
     <item row="7" column="0">
      <widget class="QLineEdit" name="buff_area">
       <property name="text">
@@ -102,22 +76,22 @@
       </property>
      </widget>
     </item>
-    <item row="11" column="0">
-     <widget class="QPushButton" name="selectBufferButton">
+    <item row="2" column="0">
+     <widget class="QLabel" name="selectLayerLabel">
       <property name="text">
-       <string>POIs in/out creation (selectBufferButton)</string>
-      </property>
-     </widget>
-    </item>
-    <item row="14" column="0">
-     <widget class="QPushButton" name="shortestRouteButton">
-      <property name="text">
-       <string>Shortest Route (shortestRouteButton)</string>
+       <string>Select current layer:</string>
       </property>
      </widget>
     </item>
     <item row="3" column="0">
      <widget class="QComboBox" name="selectLayerCombo"/>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="selectAttributeLabel">
+      <property name="text">
+       <string>Perimeter radius in meters:</string>
+      </property>
+     </widget>
     </item>
     <item row="4" column="0">
      <widget class="QLabel" name="selectAttributeLabel_2">
@@ -135,6 +109,25 @@
     </item>
     <item row="5" column="0">
      <widget class="QComboBox" name="selectAttributeCombo"/>
+    </item>
+    <item row="8" column="0">
+     <widget class="QPushButton" name="set_rad">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="text">
+       <string>Create buffer (set_rad)</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>64</width>
+        <height>64</height>
+       </size>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
