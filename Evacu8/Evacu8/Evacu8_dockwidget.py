@@ -253,35 +253,35 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         layers_out = ['Schools out', 'Hospitals out', 'Nursery Homes out']
 
         buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+        if len(QgsMapLayerRegistry.instance().mapLayersByName('Schools in')) == 0:
+            for init_layer, layer_in, layer_out in zip(init_layers, layers_in, layers_out):
+                layer = uf.getLegendLayerByName(self.iface, init_layer)
+                if buffer_layer and layer:
+                    points = uf.getFeaturesIntersections(layer, buffer_layer)
+                    new_layer = QgsVectorLayer('Point?crs=epsg:28992', layer_in, 'memory')
+                    prov = new_layer.dataProvider()
+                    for point in points:
+                        feat = QgsFeature()
+                        feat.setGeometry(point)
+                        prov.addFeatures([feat])
+                    new_layer.updateExtents()
+                    QgsMapLayerRegistry.instance().addMapLayers([new_layer])
+                    iface.legendInterface().setLayerVisible(new_layer, False)
+                    uf.addFields(new_layer, ['distance'], [QVariant.String])
+                    uf.updateField(new_layer, 'distance', '3')
 
-        for init_layer, layer_in, layer_out in zip(init_layers, layers_in, layers_out):
-            layer = uf.getLegendLayerByName(self.iface, init_layer)
-            if buffer_layer and layer:
-                points = uf.getFeaturesIntersections(layer, buffer_layer)
-                new_layer = QgsVectorLayer('Point?crs=epsg:28992', layer_in, 'memory')
-                prov = new_layer.dataProvider()
-                for point in points:
-                    feat = QgsFeature()
-                    feat.setGeometry(point)
-                    prov.addFeatures([feat])
-                new_layer.updateExtents()
-                QgsMapLayerRegistry.instance().addMapLayers([new_layer])
-                iface.legendInterface().setLayerVisible(new_layer, False)
-                uf.addFields(new_layer, ['distance'], [QVariant.String])
-                uf.updateField(new_layer, 'distance', '3')
-
-                points2 = uf.getFeaturesDifference(layer, buffer_layer)
-                new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', layer_out, 'memory')
-                prov2 = new_layer2.dataProvider()
-                for point in points2:
-                    feat = QgsFeature()
-                    feat.setGeometry(point)
-                    prov2.addFeatures([feat])
-                new_layer2.updateExtents()
-                QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
-                iface.legendInterface().setLayerVisible(new_layer2, False)
-                uf.addFields(new_layer2, ['distance'], [QVariant.String])
-                uf.updateField(new_layer2, 'distance', '3')
+                    points2 = uf.getFeaturesDifference(layer, buffer_layer)
+                    new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', layer_out, 'memory')
+                    prov2 = new_layer2.dataProvider()
+                    for point in points2:
+                        feat = QgsFeature()
+                        feat.setGeometry(point)
+                        prov2.addFeatures([feat])
+                    new_layer2.updateExtents()
+                    QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
+                    iface.legendInterface().setLayerVisible(new_layer2, False)
+                    uf.addFields(new_layer2, ['distance'], [QVariant.String])
+                    uf.updateField(new_layer2, 'distance', '3')
 
 
     # picking
