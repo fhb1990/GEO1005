@@ -25,7 +25,7 @@ import os
 import os.path
 
 from PyQt4 import QtGui, QtCore, uic
-from PyQt4.QtCore import pyqtSignal, QVariant
+from PyQt4.QtCore import pyqtSignal, Qt
 from PyQt4.QtGui import QColor
 from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis
 from qgis._gui import QgsMapToolEmitPoint, QgsRubberBand
@@ -104,8 +104,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 scenario_open = True
 
 
-
-
     # Attack Point
     def enterPoi(self):
         # remember currently selected tool
@@ -154,8 +152,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     def calculateBuffer(self):
         layer = uf.getLegendLayerByName(self.iface, "Attack Point")
         origins = layer.getFeatures()
-        #origins = self.getSelectedLayer().selectedFeatures()
-        #layer = self.getSelectedLayer()
         if origins > 0:
             cutoff_distance = self.getBufferCutoff()
             buffers = {}
@@ -181,6 +177,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 values.append([buffer[0],cutoff_distance])
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
+
+        layers = ["Schools points", "Hospitals points", "Nursery Homes points", "road_net"]
+        for layer in layers:
+            vl = uf.getLegendLayerByName(self.iface, layer)
+            iface.legendInterface().setLayerVisible(vl, True)
 
 
     #Set danger polygon#
@@ -351,26 +352,27 @@ class PolyMapTool(QgsMapToolEmitPoint):
         self.canvas = canvas
         QgsMapToolEmitPoint.__init__(self, self.canvas)
         self.rubberband = QgsRubberBand(self.canvas, QGis.Polygon)
-        self.rubberband.setWidth(1)
         self.point = None
         self.points = []
-        self.layer = QgsVectorLayer('Polygon?crs=epsg:28992', 'Danger Zone', "memory")
+        attribs = ['id']
+        types = [QtCore.QVariant.String]
+        self.layer = uf.createTempLayer('Danger Zones', 'POLYGON', '28992', attribs, types, 30)
 
     def canvasPressEvent(self, e):
         self.point = self.toMapCoordinates(e.pos())
         self.points.append(self.point)
-        self.showPoly()
+        self.showPoly(e)
 
-    def showPoly(self):
+    def showPoly(self, e):
         self.rubberband.reset(QGis.Polygon)
         for point in self.points[:-1]:
             self.rubberband.addPoint(point, False)
         self.rubberband.addPoint(self.points[-1], True)
-        self.rubberband.show()
-        if len(self.points) == 4:
+        if e.button() == Qt.RightButton:
             self.poly()
             self.point = None
             self.points = []
+            self.rubberband.reset(QGis.Polygon)
 
     def poly(self):
         geom = self.rubberband.asGeometry()
