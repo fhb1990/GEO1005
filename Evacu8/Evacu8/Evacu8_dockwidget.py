@@ -25,7 +25,7 @@ import os
 import os.path
 
 from PyQt4 import QtGui, QtCore, uic
-from PyQt4.QtCore import pyqtSignal
+from PyQt4.QtCore import pyqtSignal, QVariant
 from PyQt4.QtGui import QColor
 from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis, \
     QgsDistanceArea, QgsField
@@ -247,7 +247,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     #POI selection#
-    def POI_selection(self):
+    def POI_selection(self, mapPoint):
         init_layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
         layers_in = ['Schools in', 'Hospitals in', 'Nursery Homes in']
         layers_out = ['Schools out', 'Hospitals out', 'Nursery Homes out']
@@ -266,6 +266,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                     prov.addFeatures([feat])
                 new_layer.updateExtents()
                 QgsMapLayerRegistry.instance().addMapLayers([new_layer])
+                iface.legendInterface().setLayerVisible(new_layer, False)
+                uf.addFields(new_layer, ['distance'], [QVariant.String])
+                uf.updateField(new_layer, 'distance', '3')
 
                 points2 = uf.getFeaturesDifference(layer, buffer_layer)
                 new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', layer_out, 'memory')
@@ -276,6 +279,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                     prov2.addFeatures([feat])
                 new_layer2.updateExtents()
                 QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
+                iface.legendInterface().setLayerVisible(new_layer2, False)
+                uf.addFields(new_layer2, ['distance'], [QVariant.String])
+                uf.updateField(new_layer2, 'distance', '3')
 
 
     # picking
