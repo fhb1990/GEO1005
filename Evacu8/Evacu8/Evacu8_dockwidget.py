@@ -27,13 +27,11 @@ import os.path
 from PyQt4 import QtGui, QtCore, uic
 from PyQt4.QtCore import pyqtSignal, QVariant
 from PyQt4.QtGui import QColor
-from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis, \
-    QgsDistanceArea, QgsField
-from qgis._gui import QgsMapToolEmitPoint, QgsRubberBand, QgsVertexMarker
+from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis
+from qgis._gui import QgsMapToolEmitPoint, QgsRubberBand
 from qgis.utils import iface
 
 import random
-import processing
 
 from . import utility_functions as uf
 
@@ -66,17 +64,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # set up GUI operation signals
         # data
-        self.iface.projectRead.connect(self.updateLayers)
-        self.iface.newProjectCreated.connect(self.updateLayers)
-        self.iface.legendInterface().itemRemoved.connect(self.updateLayers)
-        self.iface.legendInterface().itemAdded.connect(self.updateLayers)
         self.load_scen.clicked.connect(self.openScenario)
         self.set_pt.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
         self.set_rad.clicked.connect(self.calculateBuffer)
-        self.set_rad.clicked.connect(self.POI_selection)
-        self.selectLayerCombo.activated.connect(self.setSelectedLayer)
-        self.selectAttributeCombo.activated.connect(self.setSelectedAttribute)
+        # self.set_rad.clicked.connect(self.POI_selection)
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
 
@@ -87,15 +79,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitEvac.canvasClicked.connect(self.getEvac)
         self.tied_points = []
 
+        self.add_col.clicked.connect(self.relationA)
+
     def closeEvent(self, event):
-        # disconnect interface signals
-        try:
-            self.iface.projectRead.disconnect(self.updateLayers)
-            self.iface.newProjectCreated.disconnect(self.updateLayers)
-            self.iface.legendInterface().itemRemoved.disconnect(self.updateLayers)
-            self.iface.legendInterface().itemAdded.disconnect(self.updateLayers)
-        except:
-            pass
+        # disconnect interface signa
 
         self.closingPlugin.emit()
         event.accept()
@@ -115,51 +102,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             if new_file:
                 self.iface.addProject(unicode(new_file))
                 scenario_open = True
-        if scenario_open:
-            self.updateLayers()
 
 
-    # Data Functions#
-    def updateLayers(self):
-        layers = uf.getLegendLayers(self.iface, 'all', 'all')
-        self.selectLayerCombo.clear()
-        if layers:
-            layer_names = uf.getLayersListNames(layers)
-            self.selectLayerCombo.addItems(layer_names)
-            self.setSelectedLayer()
-        else:
-            self.selectAttributeCombo.clear()
-            self.clearChart()
 
-    def setSelectedLayer(self):
-        layer_name = self.selectLayerCombo.currentText()
-        layer = uf.getLegendLayerByName(self.iface,layer_name)
-        self.updateAttributes(layer)
-
-    def getSelectedLayer(self):
-        layer_name = self.selectLayerCombo.currentText()
-        layer = uf.getLegendLayerByName(self.iface,layer_name)
-        return layer
-
-    def updateAttributes(self, layer):
-        self.selectAttributeCombo.clear()
-        if layer:
-            self.clearReport()
-            self.clearChart()
-            fields = uf.getFieldNames(layer)
-            if fields:
-                self.selectAttributeCombo.addItems(fields)
-                self.setSelectedAttribute()
-                # send list to the report list window
-                self.updateReport(fields)
-
-    def setSelectedAttribute(self):
-        field_name = self.selectAttributeCombo.currentText()
-        self.updateAttribute.emit(field_name)
-
-    def getSelectedAttribute(self):
-        field_name = self.selectAttributeCombo.currentText()
-        return field_name
 
     # Attack Point
     def enterPoi(self):
@@ -247,41 +192,41 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     #POI selection#
-    def POI_selection(self, mapPoint):
-        init_layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
-        layers_in = ['Schools in', 'Hospitals in', 'Nursery Homes in']
-        layers_out = ['Schools out', 'Hospitals out', 'Nursery Homes out']
-
-        buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
-        if len(QgsMapLayerRegistry.instance().mapLayersByName('Schools in')) == 0:
-            for init_layer, layer_in, layer_out in zip(init_layers, layers_in, layers_out):
-                layer = uf.getLegendLayerByName(self.iface, init_layer)
-                if buffer_layer and layer:
-                    points = uf.getFeaturesIntersections(layer, buffer_layer)
-                    new_layer = QgsVectorLayer('Point?crs=epsg:28992', layer_in, 'memory')
-                    prov = new_layer.dataProvider()
-                    for point in points:
-                        feat = QgsFeature()
-                        feat.setGeometry(point)
-                        prov.addFeatures([feat])
-                    new_layer.updateExtents()
-                    QgsMapLayerRegistry.instance().addMapLayers([new_layer])
-                    iface.legendInterface().setLayerVisible(new_layer, False)
-                    uf.addFields(new_layer, ['distance'], [QVariant.String])
-                    uf.updateField(new_layer, 'distance', '3')
-
-                    points2 = uf.getFeaturesDifference(layer, buffer_layer)
-                    new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', layer_out, 'memory')
-                    prov2 = new_layer2.dataProvider()
-                    for point in points2:
-                        feat = QgsFeature()
-                        feat.setGeometry(point)
-                        prov2.addFeatures([feat])
-                    new_layer2.updateExtents()
-                    QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
-                    iface.legendInterface().setLayerVisible(new_layer2, False)
-                    uf.addFields(new_layer2, ['distance'], [QVariant.String])
-                    uf.updateField(new_layer2, 'distance', '3')
+    # def POI_selection(self, mapPoint):
+    #     init_layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+    #     layers_in = ['Schools in', 'Hospitals in', 'Nursery Homes in']
+    #     layers_out = ['Schools out', 'Hospitals out', 'Nursery Homes out']
+    #
+    #     buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+    #     if len(QgsMapLayerRegistry.instance().mapLayersByName('Schools in')) == 0:
+    #         for init_layer, layer_in, layer_out in zip(init_layers, layers_in, layers_out):
+    #             layer = uf.getLegendLayerByName(self.iface, init_layer)
+    #             if buffer_layer and layer:
+    #                 points = uf.getFeaturesIntersections(layer, buffer_layer)
+    #                 new_layer = QgsVectorLayer('Point?crs=epsg:28992', layer_in, 'memory')
+    #                 prov = new_layer.dataProvider()
+    #                 for point in points:
+    #                     feat = QgsFeature()
+    #                     feat.setGeometry(point)
+    #                     prov.addFeatures([feat])
+    #                 new_layer.updateExtents()
+    #                 QgsMapLayerRegistry.instance().addMapLayers([new_layer])
+    #                 iface.legendInterface().setLayerVisible(new_layer, False)
+    #                 uf.addFields(new_layer, ['distance'], [QVariant.String])
+    #                 uf.updateField(new_layer, 'distance', '3')
+    #
+    #                 points2 = uf.getFeaturesDifference(layer, buffer_layer)
+    #                 new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', layer_out, 'memory')
+    #                 prov2 = new_layer2.dataProvider()
+    #                 for point in points2:
+    #                     feat = QgsFeature()
+    #                     feat.setGeometry(point)
+    #                     prov2.addFeatures([feat])
+    #                 new_layer2.updateExtents()
+    #                 QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
+    #                 iface.legendInterface().setLayerVisible(new_layer2, False)
+    #                 uf.addFields(new_layer2, ['distance'], [QVariant.String])
+    #                 uf.updateField(new_layer2, 'distance', '3')
 
 
     # picking
@@ -317,7 +262,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         roads_layer = uf.getLegendLayerByName(self.iface, "road_net")
         if roads_layer:
             # see if there is an obstacles layer to subtract roads from the network
-            obstacles_layer = uf.getLegendLayerByName(self.iface, "Obstacles")
+            obstacles_layer = uf.getLegendLayerByName(self.iface, "Danger Zone")
             if obstacles_layer:
                 # retrieve roads outside obstacles (inside = False)
                 features = uf.getFeaturesByIntersection(roads_layer, obstacles_layer, False)
@@ -343,7 +288,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # the tied points are the new source_points on the graph
                 if self.graph and self.tied_points:
                     text = "network is built for %s points" % len(self.tied_points)
-                    self.insertReport(text)
+
         return
 
     def calculateRoute(self):
@@ -385,16 +330,19 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.canvas.refresh()
 
 
-    # report window functions
-    def updateReport(self,report):
-        self.reportList.clear()
-        self.reportList.addItems(report)
 
-    def insertReport(self,item):
-        self.reportList.insertItem(0, item)
 
-    def clearReport(self):
-        self.reportList.clear()
+
+
+    # RELATION BETWEEN DIST AND POP & SELECT FIRST 3 ITEMS
+    def relationA(self):
+        layer = uf.getLegendLayerByName(self.iface, "Schools points")
+        uf.addFields(layer, ['relation'], [QtCore.QVariant.Double])
+        exp_1 = "pop_rand / id_Evacu8"
+        uf.updateField(layer, 'relation', exp_1)
+        exp_2 = "pop_rand = 101"
+        uf.selectFeaturesByExpression(layer, exp_2)
+
 
 
 class PolyMapTool(QgsMapToolEmitPoint):
