@@ -61,6 +61,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitPoint = QgsMapToolEmitPoint(self.canvas)
         self.toolPoly = PolyMapTool(self.canvas)
         self.emitEvac = QgsMapToolEmitPoint(self.canvas)
+        self.emitShel = QgsMapToolEmitPoint(self.canvas)
 
         # set up GUI operation signals
         # data
@@ -73,10 +74,18 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.get_danger.clicked.connect(self.getDangerZone)
 
         # analysis
+        self.evac = None
+        self.evacId = None
+        self.shel = None
+        self.shelId = None
+
         self.shortestRouteButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
         self.select_POI.clicked.connect(self.enterEvac)
         self.emitEvac.canvasClicked.connect(self.getEvac)
+        self.select_shelter.clicked.connect(self.enterShel)
+        self.emitShel.canvasClicked.connect(self.getShel)
+        self.desel_POI.clicked.connect(self.deleteEvac)
         self.tied_points = []
 
         self.add_col.clicked.connect(self.relationA)
@@ -117,6 +126,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.canvas.setMapTool(self.userTool)
         # Get the click
         if mapPoint:
+            self.atk_pt = QgsPoint(mapPoint)
             # Specify the geometry type
             layer = QgsVectorLayer('Point?crs=epsg:28992', 'Attack Point', 'memory')
 
@@ -164,9 +174,12 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             if not buffer_layer:
                 attribs = ['id', 'distance']
                 types = [QtCore.QVariant.String, QtCore.QVariant.Double]
-                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 30)
+                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 70)
                 uf.loadTempLayer(buffer_layer)
                 buffer_layer.setLayerName('Buffers')
+                symbols = buffer_layer.rendererV2().symbols()
+                symbol = symbols[0]
+                symbol.setColor(QColor.fromRgb(220, 220, 0))
             # insert buffer polygons
             geoms = []
             values = []
@@ -250,12 +263,49 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             while fit.nextFeature(feat):
                 spIndex.insertFeature(feat)
 
-            pt = QgsPoint(evac)
+            self.evac = QgsPoint(evac)
 
             # QgsSpatialIndex.nearestNeighbor (QgsPoint point, int neighbors)
-            nearestIds = spIndex.nearestNeighbor(pt, 1)  # we need only one neighbour
-            featureId = nearestIds[0]
-            lineLayer.select(featureId)
+            nearestIds = spIndex.nearestNeighbor(self.evac, 1)  # we need only one neighbour
+            self.evacId = nearestIds[0]
+            lineLayer.select(self.evacId)
+
+    def deleteEvac(self):
+        routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
+        if routes_layer:
+            QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
+        lineLayer = uf.getLegendLayerByName(iface, "road_net")
+        lineLayer.removeSelection()
+        self.refreshCanvas(lineLayer)
+
+    def enterShel(self):
+        routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
+        if routes_layer:
+            QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
+        self.canvas.setMapTool(self.emitEvac)
+
+    def getShel(self, shel):
+        self.canvas.unsetMapTool(self.emitEvac)
+
+        if shel:
+            lineLayer = uf.getLegendLayerByName(iface, "road_net")
+            provider = lineLayer.dataProvider()
+
+            spIndex = QgsSpatialIndex()  # create spatial index object
+
+            feat = QgsFeature()
+            fit = provider.getFeatures()  # gets all features in layer
+
+            # insert features to index
+            while fit.nextFeature(feat):
+                spIndex.insertFeature(feat)
+
+            self.shel = QgsPoint(shel)
+
+            # QgsSpatialIndex.nearestNeighbor (QgsPoint point, int neighbors)
+            nearestIds = spIndex.nearestNeighbor(self.shel, 1)  # we need only one neighbour
+            self.shelId = nearestIds[0]
+            lineLayer.select(self.shelId)
 
 
     # route functions
@@ -320,10 +370,13 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             for route in routes_layer.getFeatures():
                 print route.id()
             uf.insertTempFeatures(routes_layer, [path], [['testing', 100.00]])
-            # self.refreshCanvas(routes_layer)
+            self.refreshCanvas(routes_layer)
 
+            lineLayer = uf.getLegendLayerByName(iface, "road_net")
+            lineLayer.deselect(self.evacId)
+            self.refreshCanvas(lineLayer)
 
-    # after adding features to layers needs a refresh (sometimes)
+# after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
         if self.canvas.isCachingEnabled():
             layer.setCacheImage(None)
@@ -356,7 +409,10 @@ class PolyMapTool(QgsMapToolEmitPoint):
         self.points = []
         attribs = ['id']
         types = [QtCore.QVariant.String]
-        self.layer = uf.createTempLayer('Danger Zones', 'POLYGON', '28992', attribs, types, 30)
+        self.layer = uf.createTempLayer('Danger Zones', 'POLYGON', '28992', attribs, types, 70)
+        self.symbols = self.layer.rendererV2().symbols()
+        self.symbol = self.symbols[0]
+        self.symbol.setColor(QColor.fromRgb(160, 160, 160))
 
     def canvasPressEvent(self, e):
         self.point = self.toMapCoordinates(e.pos())
