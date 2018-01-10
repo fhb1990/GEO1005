@@ -69,6 +69,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_pt.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
         self.set_rad.clicked.connect(self.calculateBuffer)
+        self.set_rad.clicked.connect(self.zoomtolayer)
         # self.set_rad.clicked.connect(self.POI_selection)
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
@@ -191,11 +192,19 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
+
         layers = ["Schools points", "Hospitals points", "Nursery Homes points", "road_net"]
         for layer in layers:
             vl = uf.getLegendLayerByName(self.iface, layer)
             iface.legendInterface().setLayerVisible(vl, True)
 
+
+
+    def zoomtolayer(self):
+        layer = uf.getLegendLayerByName(self.iface, "Buffers")
+        canvas = iface.mapCanvas()
+        ext = layer.extent()
+        canvas.setExtent(ext)
 
     #Set danger polygon#
     def setDangerZone(self):
