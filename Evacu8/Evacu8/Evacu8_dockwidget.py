@@ -74,34 +74,37 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
 
-        # analysis
-        self.evac = None
-        self.evacId = None
-        self.shel = None
-        self.shelId = None
-
-        #set images and icons
+        # set images and icons
         self.logo.setPixmap(QtGui.QPixmap(':images\Logo.jpeg'))
         self.legend.setPixmap(QtGui.QPixmap(':images\Legend.png'))
 
+        # analysis
+        self.evac = None
+        self.evacId = int()
+        self.shel = None
+        self.shelId = int()
+
+        self.evac_layer = None
+        self.evac_feat = None
+        self.shel_layer = None
+        self.shel_feat = None
+
         self.select_POI.clicked.connect(self.enterEvac)
         self.emitEvac.canvasClicked.connect(self.getEvac)
+        self.desel_POI.clicked.connect(self.deleteEvac)
         self.select_shelter.clicked.connect(self.enterShel)
+        self.emitShel.canvasClicked.connect(self.getShel)
         self.shortestRouteButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
-        self.emitShel.canvasClicked.connect(self.getShel)
-        self.desel_POI.clicked.connect(self.deleteEvac)
         self.tied_points = []
-        self.to_evac_select.clicked.connect(self.to_evac_table)
-        self.shelter_select.clicked.connect(self.shelter_table)
         self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Pop.","Dist."])
         self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Cap.","Route"])
 
     def closeEvent(self, event):
         # disconnect interface signa
-
         self.closingPlugin.emit()
         event.accept()
+
 
     ##Functions##
     #Open Scenario
@@ -176,7 +179,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             vl.commitChanges()
 
 
-    # buffer functions#
+    # buffer functions
     def getBufferCutoff(self):
         buffer = self.buff_area.text()
         if uf.isNumeric(buffer):
@@ -225,7 +228,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             iface.legendInterface().setLayerVisible(vl, True)
 
 
-    #Set danger polygon#
+    # Set danger polygon
     def setDangerZone(self):
         self.canvas.setMapTool(self.toolPoly)
 
@@ -298,24 +301,55 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.evacId = nearestIds[0]
             lineLayer.select(self.evacId)
 
+            self.evac_layer, self.evac_feat = self.select(self.evac)
+            self.to_evac_table()
+
+    def select(self, point):
+        layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+
+        min_dist = QgsDistanceArea()
+        min_layer = QgsVectorLayer()
+        for layer in layers:
+            vl = uf.getLegendLayerByName(self.iface, layer)
+
+            feats = vl.getFeatures()
+            for feat in feats:
+                geom = feat.geometry()
+                pt = geom.asPoint()
+                dist = QgsDistanceArea().measureLine(point, pt)
+                if dist < min_dist:
+                    min_dist = dist
+                    min_feat = feat
+                    min_id = feat.id()
+                    min_layer = vl
+
+        min_layer.select(min_id)
+        self.canvas.setSelectionColor(QColor("red"))
+        self.canvas.refresh()
+
+        return min_layer, min_feat
+
     def deleteEvac(self):
         routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
         if routes_layer:
             QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
         lineLayer = uf.getLegendLayerByName(iface, "road_net")
         lineLayer.removeSelection()
+        self.evac_layer.removeSelection()
         self.refreshCanvas(lineLayer)
 
     def enterShel(self):
         routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
         if routes_layer:
             QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
-        self.canvas.setMapTool(self.emitEvac)
-
-
+        if self.shel_layer:
+            self.shel_layer.deselect(self.shel_feat.id())
+        lineLayer = uf.getLegendLayerByName(iface, "road_net")
+        lineLayer.deselect(self.shelId)
+        self.canvas.setMapTool(self.emitShel)
 
     def getShel(self, shel):
-        self.canvas.unsetMapTool(self.emitEvac)
+        self.canvas.unsetMapTool(self.emitShel)
 
         if shel:
             lineLayer = uf.getLegendLayerByName(iface, "road_net")
@@ -337,8 +371,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.shelId = nearestIds[0]
             lineLayer.select(self.shelId)
 
-
-
+            self.shel_layer, self.shel_feat = self.select(self.shel)
+            self.shelter_table()
 
 
     # route functions
@@ -406,38 +440,35 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(routes_layer)
 
             lineLayer = uf.getLegendLayerByName(iface, "road_net")
-            lineLayer.deselect(self.evacId)
+            lineLayer.deselect(self.shelId)
             self.refreshCanvas(lineLayer)
 
-# after adding features to layers needs a refresh (sometimes)
+    # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
         if self.canvas.isCachingEnabled():
             layer.setCacheImage(None)
         else:
             self.canvas.refresh()
 
-# Displaying information
-
+    # Displaying information
     def to_evac_table(self):
-        layer = uf.getLegendLayerByName(self.iface,"Schools points")
-        feat = layer.selectedFeatures()
-        tent_values = feat[0].attributes()
+        tent_values = self.evac_feat.attributes()
         indices = [2,3,7,8,9]
         values = [tent_values[i] for i in indices]
         # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
         for i, item in enumerate(values):
-            # i is the table row, items must tbe added as QTableWidgetItems
+            # i is the table row, items must be added as QTableWidgetItems
             self.to_evac_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
 
     def shelter_table(self):
         if len(QgsMapLayerRegistry.instance().mapLayersByName('Routes')) == 0:
             return
-        layer = uf.getLegendLayerByName(self.iface,"Schools points")
+        layer = uf.getLegendLayerByName(self.iface, "Schools points")
         feat = layer.selectedFeatures()
         tent_values = feat[0].attributes()
-        indices = [2,3,7,8]
+        indices = [2, 3, 7, 8]
         values = [tent_values[i] for i in indices]
-        route = uf.getLegendLayerByName(self.iface,"Routes")
+        route = uf.getLegendLayerByName(self.iface, "Routes")
         feat = route.getFeatures()
 
         # values.append[ROUTE LENGTH]
