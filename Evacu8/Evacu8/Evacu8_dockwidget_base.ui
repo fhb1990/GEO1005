@@ -111,7 +111,7 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>181</width>
+          <width>341</width>
           <height>23</height>
          </rect>
         </property>
@@ -136,7 +136,7 @@
          <rect>
           <x>10</x>
           <y>130</y>
-          <width>181</width>
+          <width>341</width>
           <height>23</height>
          </rect>
         </property>
@@ -149,7 +149,7 @@
          <rect>
           <x>10</x>
           <y>68</y>
-          <width>181</width>
+          <width>341</width>
           <height>23</height>
          </rect>
         </property>
@@ -162,7 +162,7 @@
          <rect>
           <x>10</x>
           <y>39</y>
-          <width>181</width>
+          <width>341</width>
           <height>23</height>
          </rect>
         </property>
@@ -175,7 +175,7 @@
          <rect>
           <x>10</x>
           <y>160</y>
-          <width>181</width>
+          <width>341</width>
           <height>23</height>
          </rect>
         </property>
@@ -183,25 +183,12 @@
          <string>Shortest Route (shortestRouteButton)</string>
         </property>
        </widget>
-       <widget class="QPushButton" name="add_col">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>190</y>
-          <width>181</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>relation button (add_col)</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="desel_POI">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>100</y>
-          <width>181</width>
+          <width>341</width>
           <height>23</height>
          </rect>
         </property>

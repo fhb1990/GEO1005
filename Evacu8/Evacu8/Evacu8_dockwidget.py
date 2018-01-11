@@ -80,11 +80,12 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shel = None
         self.shelId = None
 
-        self.shortestRouteButton.clicked.connect(self.buildNetwork)
-        self.shortestRouteButton.clicked.connect(self.calculateRoute)
+
         self.select_POI.clicked.connect(self.enterEvac)
         self.emitEvac.canvasClicked.connect(self.getEvac)
         self.select_shelter.clicked.connect(self.enterShel)
+        self.shortestRouteButton.clicked.connect(self.buildNetwork)
+        self.shortestRouteButton.clicked.connect(self.calculateRoute)
         self.emitShel.canvasClicked.connect(self.getShel)
         self.desel_POI.clicked.connect(self.deleteEvac)
         self.tied_points = []
@@ -92,7 +93,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shelter_select.clicked.connect(self.updateTable2)
         self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Population"])
         self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Capacity"])
-        self.add_col.clicked.connect(self.relationA)
 
     def closeEvent(self, event):
         # disconnect interface signa
@@ -309,6 +309,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
         self.canvas.setMapTool(self.emitEvac)
 
+
+
     def getShel(self, shel):
         self.canvas.unsetMapTool(self.emitEvac)
 
@@ -333,12 +335,15 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             lineLayer.select(self.shelId)
 
 
+
+
+
     # route functions
     def getNetwork(self):
         roads_layer = uf.getLegendLayerByName(self.iface, "road_net")
         if roads_layer:
             # see if there is an obstacles layer to subtract roads from the network
-            obstacles_layer = uf.getLegendLayerByName(self.iface, "Danger Zone")
+            obstacles_layer = uf.getLegendLayerByName(self.iface, "Danger Zones")
             if obstacles_layer:
                 # retrieve roads outside obstacles (inside = False)
                 features = uf.getFeaturesByIntersection(roads_layer, obstacles_layer, False)
@@ -433,17 +438,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
 
-    # RELATION BETWEEN DIST AND POP & SELECT FIRST 3 ITEMS
-    def relationA(self):
-        layer = uf.getLegendLayerByName(self.iface, "Schools points")
-        uf.addFields(layer, ['relation'], [QtCore.QVariant.Double])
-        exp_1 = "pop_rand / id_Evacu8"
-        uf.updateField(layer, 'relation', exp_1)
-        exp_2 = "pop_rand = 101"
-        uf.selectFeaturesByExpression(layer, exp_2)
-
-
-
 class PolyMapTool(QgsMapToolEmitPoint):
 
     def __init__(self, canvas):
@@ -454,7 +448,7 @@ class PolyMapTool(QgsMapToolEmitPoint):
         self.points = []
         attribs = ['id']
         types = [QtCore.QVariant.String]
-        self.layer = uf.createTempLayer('Danger Zones', 'POLYGON', '28992', attribs, types, 70)
+        self.layer = uf.createTempLayer('Danger Zones', 'POLYGON', '28992', attribs, types, 50)
         self.symbols = self.layer.rendererV2().symbols()
         self.symbol = self.symbols[0]
         self.symbol.setColor(QColor.fromRgb(160, 160, 160))
