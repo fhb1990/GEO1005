@@ -89,10 +89,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitShel.canvasClicked.connect(self.getShel)
         self.desel_POI.clicked.connect(self.deleteEvac)
         self.tied_points = []
-        self.to_evac_select.clicked.connect(self.updateTable)
-        self.shelter_select.clicked.connect(self.updateTable2)
-        self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Population"])
-        self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Capacity"])
+        self.to_evac_select.clicked.connect(self.to_evac_table)
+        self.shelter_select.clicked.connect(self.shelter_table)
+        self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Pop.","Dist."])
+        self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Cap.","Route"])
 
     def closeEvent(self, event):
         # disconnect interface signa
@@ -413,28 +413,35 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             self.canvas.refresh()
 
+# Displaying information
 
-    # Displaying information
-    def updateTable(self):
-        values = ["School", "Erasmiaans", "Lelzlaan 12, Rotterdam", "294"]
+    def to_evac_table(self):
+        layer = uf.getLegendLayerByName(self.iface,"Schools points")
+        feat = layer.selectedFeatures()
+        tent_values = feat[0].attributes()
+        indices = [2,3,7,8,9]
+        values = [tent_values[i] for i in indices]
         # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
         for i, item in enumerate(values):
             # i is the table row, items must tbe added as QTableWidgetItems
             self.to_evac_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
-        self.to_evac_info.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        self.to_evac_info.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-        self.to_evac_info.resizeRowsToContents()
 
-    def updateTable2(self):
-        values2 = ["School", "TU Delft", "Mekelweg 34, Delft", "1246"]
+    def shelter_table(self):
+        if len(QgsMapLayerRegistry.instance().mapLayersByName('Routes')) == 0:
+            return
+        layer = uf.getLegendLayerByName(self.iface,"Schools points")
+        feat = layer.selectedFeatures()
+        tent_values = feat[0].attributes()
+        indices = [2,3,7,8]
+        values = [tent_values[i] for i in indices]
+        route = uf.getLegendLayerByName(self.iface,"Routes")
+        feat = route.getFeatures()
+
+        # values.append[ROUTE LENGTH]
         # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
-        for i, item in enumerate(values2):
+        for i, item in enumerate(values):
             # i is the table row, items must tbe added as QTableWidgetItems
             self.shelter_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
-        self.shelter_info.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
-        self.shelter_info.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
-        self.shelter_info.resizeRowsToContents()
-
 
 
 
