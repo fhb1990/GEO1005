@@ -25,9 +25,10 @@ import os
 import os.path
 
 from PyQt4 import QtGui, QtCore, uic
-from PyQt4.QtCore import pyqtSignal, Qt
+from PyQt4.QtCore import pyqtSignal, Qt, QVariant
 from PyQt4.QtGui import QColor
-from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis
+from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis, \
+    QgsDistanceArea, QgsTolerance, QgsRectangle
 from qgis._gui import QgsMapToolEmitPoint, QgsRubberBand
 from qgis.utils import iface
 
@@ -69,7 +70,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_pt.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
         self.set_rad.clicked.connect(self.calculateBuffer)
-        self.set_rad.clicked.connect(self.zoomtolayer)
         # self.set_rad.clicked.connect(self.POI_selection)
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
@@ -88,7 +88,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitShel.canvasClicked.connect(self.getShel)
         self.desel_POI.clicked.connect(self.deleteEvac)
         self.tied_points = []
-
+        self.to_evac_select.clicked.connect(self.updateTable)
+        self.shelter_select.clicked.connect(self.updateTable2)
+        self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Population"])
+        self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Capacity"])
         self.add_col.clicked.connect(self.relationA)
 
     def closeEvent(self, event):
@@ -128,6 +131,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Get the click
         if mapPoint:
             self.atk_pt = QgsPoint(mapPoint)
+            self.distance()
             # Specify the geometry type
             layer = QgsVectorLayer('Point?crs=epsg:28992', 'Attack Point', 'memory')
 
@@ -150,6 +154,23 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Add the layer to the Layers panel
             QgsMapLayerRegistry.instance().addMapLayers([layer])
 
+
+    def distance(self):
+        layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+        for layer in layers:
+            vl = uf.getLegendLayerByName(self.iface, layer)
+            uf.addFields(vl, ['distance'], [QVariant.Double])
+            index = vl.fieldNameIndex('distance')
+
+            feats = vl.getFeatures()
+            dist = QgsDistanceArea()
+            vl.startEditing()
+            for feat in feats:
+                geom = feat.geometry()
+                pt = geom.asPoint()
+                m = dist.measureLine(self.atk_pt, pt)
+                vl.changeAttributeValue(feat.id(), index, m)
+            vl.commitChanges()
 
 
     # buffer functions#
@@ -192,19 +213,14 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             uf.insertTempFeatures(buffer_layer, geoms, values)
             self.refreshCanvas(buffer_layer)
 
+            extent = buffer_layer.extent()
+            self.canvas.setExtent(extent)
 
         layers = ["Schools points", "Hospitals points", "Nursery Homes points", "road_net"]
         for layer in layers:
             vl = uf.getLegendLayerByName(self.iface, layer)
             iface.legendInterface().setLayerVisible(vl, True)
 
-
-
-    def zoomtolayer(self):
-        layer = uf.getLegendLayerByName(self.iface, "Buffers")
-        canvas = iface.mapCanvas()
-        ext = layer.extent()
-        canvas.setExtent(ext)
 
     #Set danger polygon#
     def setDangerZone(self):
@@ -393,6 +409,26 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.canvas.refresh()
 
 
+    # Displaying information
+    def updateTable(self):
+        values = ["School", "Erasmiaans", "Lelzlaan 12, Rotterdam", "294"]
+        # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
+        for i, item in enumerate(values):
+            # i is the table row, items must tbe added as QTableWidgetItems
+            self.to_evac_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+        self.to_evac_info.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        self.to_evac_info.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+        self.to_evac_info.resizeRowsToContents()
+
+    def updateTable2(self):
+        values2 = ["School", "TU Delft", "Mekelweg 34, Delft", "1246"]
+        # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
+        for i, item in enumerate(values2):
+            # i is the table row, items must tbe added as QTableWidgetItems
+            self.shelter_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+        self.shelter_info.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.ResizeToContents)
+        self.shelter_info.horizontalHeader().setResizeMode(1, QtGui.QHeaderView.Stretch)
+        self.shelter_info.resizeRowsToContents()
 
 
 
