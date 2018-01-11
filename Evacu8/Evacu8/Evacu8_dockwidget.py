@@ -80,6 +80,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shel = None
         self.shelId = None
 
+        #set images and icons
+        self.logo.setPixmap(QtGui.QPixmap(':images\Logo.jpeg'))
+        self.legend.setPixmap(QtGui.QPixmap(':images\Legend.png'))
 
         self.select_POI.clicked.connect(self.enterEvac)
         self.emitEvac.canvasClicked.connect(self.getEvac)

@@ -14,11 +14,21 @@
       <file leaf-file-name="Evacu8_dockwidget.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Evacu8_dockwidget.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6125">
-              <caret line="443" column="82" lean-forward="false" selection-start-line="443" selection-start-column="82" selection-end-line="443" selection-end-column="82" />
+            <state relative-caret-position="1411">
+              <caret line="83" column="63" lean-forward="false" selection-start-line="83" selection-start-column="63" selection-end-line="83" selection-end-column="63" />
               <folding>
-                <element signature="e#24#1129#1" expanded="false" />
+                <element signature="e#1131#1140#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="spatial_decision_dockwidget.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../SpatialDecision/spatial_decision_dockwidget.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="38">
+              <caret line="119" column="0" lean-forward="true" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -37,9 +47,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>iface</find>
-      <find>event</find>
-      <find>set_pt</find>
       <find>cut</find>
       <find>reportlist</find>
       <find>refreshca</find>
@@ -67,6 +74,9 @@
       <find>getshel</find>
       <find>emite</find>
       <find>entershe</find>
+      <find>logolab</find>
+      <find>con</find>
+      <find>icon</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -81,6 +91,7 @@
         <option value="$PROJECT_DIR$/../../SpatialDecision/spatial_decision_dockwidget.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/utility_functions.py" />
+        <option value="$PROJECT_DIR$/resources.qrc" />
         <option value="$PROJECT_DIR$/Evacu8_dockwidget.py" />
       </list>
     </option>
@@ -112,7 +123,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -124,12 +134,13 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
       <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../SpatialDecision/spatial_decision_dockwidget.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources.qrc" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunDashboard">
@@ -160,7 +171,7 @@
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15300146" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1522694" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43994778" sideWeight="0.5025" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -194,20 +205,12 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/utility_functions.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7548">
-          <caret line="452" column="21" lean-forward="false" selection-start-line="452" selection-start-column="15" selection-end-line="452" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Evacu8_dockwidget.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -225,7 +228,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -243,7 +246,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -253,7 +256,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -263,7 +266,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -273,7 +276,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -283,7 +286,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -308,7 +311,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -325,7 +328,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -342,7 +345,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -359,7 +362,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -376,7 +379,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -393,7 +396,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -410,7 +413,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -427,7 +430,7 @@
         <state relative-caret-position="442">
           <caret line="51" column="26" lean-forward="false" selection-start-line="51" selection-start-column="26" selection-end-line="51" selection-end-column="26" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -444,7 +447,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -461,7 +464,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -471,7 +474,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -481,7 +484,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -491,7 +494,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -501,7 +504,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -511,7 +514,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -521,7 +524,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -538,7 +541,7 @@
         <state relative-caret-position="442">
           <caret line="26" column="35" lean-forward="false" selection-start-line="26" selection-start-column="35" selection-end-line="26" selection-end-column="35" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -594,13 +597,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../SpatialDecision/spatial_decision_dockwidget.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="74" column="73" lean-forward="false" selection-start-line="71" selection-start-column="8" selection-end-line="74" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utility_functions.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="12070">
@@ -609,12 +605,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/resources.qrc">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="29" lean-forward="false" selection-start-line="6" selection-start-column="29" selection-end-line="6" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../SpatialDecision/spatial_decision_dockwidget.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="38">
+          <caret line="119" column="0" lean-forward="true" selection-start-line="119" selection-start-column="0" selection-end-line="119" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Evacu8_dockwidget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6125">
-          <caret line="443" column="82" lean-forward="false" selection-start-line="443" selection-start-column="82" selection-end-line="443" selection-end-column="82" />
+        <state relative-caret-position="1411">
+          <caret line="83" column="63" lean-forward="false" selection-start-line="83" selection-start-column="63" selection-end-line="83" selection-end-column="63" />
           <folding>
-            <element signature="e#24#1129#1" expanded="false" />
+            <element signature="e#1131#1140#0" expanded="true" />
           </folding>
         </state>
       </provider>

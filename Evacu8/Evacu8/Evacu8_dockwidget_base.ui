@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>384</width>
-    <height>495</height>
+    <height>671</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -15,7 +15,7 @@
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QTabWidget" name="tabs">
       <property name="currentIndex">
        <number>1</number>
@@ -307,7 +307,30 @@
          <string>Shelter:</string>
         </property>
        </widget>
+       <widget class="QLabel" name="legend">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>410</y>
+          <width>301</width>
+          <height>131</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Legend Goes Here</string>
+        </property>
+       </widget>
       </widget>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="logo">
+      <property name="text">
+       <string>Logo</string>
+      </property>
+      <property name="scaledContents">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
    </layout>
