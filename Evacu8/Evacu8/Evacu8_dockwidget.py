@@ -59,6 +59,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         #define globals
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
+        self.plugin_dir = os.path.dirname(__file__)
         self.emitPoint = QgsMapToolEmitPoint(self.canvas)
         self.toolPoly = PolyMapTool(self.canvas)
         self.emitEvac = QgsMapToolEmitPoint(self.canvas)
@@ -109,18 +110,19 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     ##Functions##
     #Open Scenario
     def openScenario(self,filename=""):
-        scenario_open = False
-        scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
-        # check if file exists
-        if os.path.isfile(scenario_file):
-            self.iface.addProject(scenario_file)
-            scenario_open = True
-        else:
-            last_dir = uf.getLastDir("data")
-            new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-            if new_file:
-                self.iface.addProject(unicode(new_file))
-                scenario_open = True
+        self.iface.addProject(unicode(self.plugin_dir+"/data/Evacu8_dataset.qgs"))
+        # scenario_open = False
+        # scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
+        # # check if file exists
+        # if os.path.isfile(scenario_file):
+        #     self.iface.addProject(scenario_file)
+        #     scenario_open = True
+        # else:
+        #     last_dir = uf.getLastDir("data")
+        #     new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
+        #     if new_file:
+        #         self.iface.addProject(unicode(new_file))
+        #         scenario_open = True
 
 
     # Attack Point
