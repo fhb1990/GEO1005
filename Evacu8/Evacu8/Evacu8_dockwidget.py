@@ -25,7 +25,7 @@ import os
 import os.path
 
 from PyQt4 import QtGui, QtCore, uic
-from PyQt4.QtCore import pyqtSignal, Qt, QVariant
+from PyQt4.QtCore import pyqtSignal, Qt, QVariant, QSize
 from PyQt4.QtGui import QColor
 from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis, \
     QgsDistanceArea, QgsTolerance, QgsRectangle
@@ -78,6 +78,13 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # set images and icons
         self.logo.setPixmap(QtGui.QPixmap(':images\Logosmall.jpeg'))
         self.load_scen.setIcon(QtGui.QIcon(':images\Open.png'))
+        self.load_scen.setIconSize(QSize(25, 25))
+        self.set_danger.setIcon(QtGui.QIcon(':images\Draw1.svg'))
+        self.set_danger.setIconSize(QSize(25, 25))
+        self.get_danger.setIcon(QtGui.QIcon(':images\Check.png'))
+        self.get_danger.setIconSize(QSize(25, 25))
+        self.shortestRouteButton.setIcon(QtGui.QIcon(':images\Route.png'))
+        self.shortestRouteButton.setIconSize(QSize(30, 30))
 
         # analysis
         self.evac = QgsPoint()
@@ -238,6 +245,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         rlayer = uf.getLegendLayerByName(self.iface, "OpenStreetMap")
         rlayer.renderer().setOpacity(0.5)  # 0.5 = 50%; 0.1 = 90%...
         rlayer.triggerRepaint()
+
+        #jump to tab 2
+        self.tabs.setCurrentIndex(1)
 
 
     # Set danger polygon

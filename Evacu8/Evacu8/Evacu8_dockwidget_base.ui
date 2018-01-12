@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>366</width>
-    <height>589</height>
+    <width>381</width>
+    <height>569</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -48,7 +48,7 @@
       <property name="currentIndex">
        <number>0</number>
       </property>
-      <widget class="QWidget" name="Tab1">
+      <widget class="QWidget" name="tab_1">
        <attribute name="title">
         <string>Set scenario</string>
        </attribute>
@@ -57,8 +57,8 @@
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>31</width>
-          <height>31</height>
+          <width>41</width>
+          <height>41</height>
          </rect>
         </property>
         <property name="text">
@@ -68,22 +68,22 @@
        <widget class="QLabel" name="label">
         <property name="geometry">
          <rect>
-          <x>50</x>
+          <x>60</x>
           <y>10</y>
           <width>91</width>
-          <height>30</height>
+          <height>41</height>
          </rect>
         </property>
         <property name="text">
          <string>Load Scenario</string>
         </property>
        </widget>
-       <widget class="QGroupBox" name="groupBox">
+       <widget class="QGroupBox" name="evac_box">
         <property name="geometry">
          <rect>
           <x>100</x>
           <y>250</y>
-          <width>201</width>
+          <width>211</width>
           <height>81</height>
          </rect>
         </property>
@@ -95,7 +95,7 @@
           <rect>
            <x>10</x>
            <y>50</y>
-           <width>181</width>
+           <width>191</width>
            <height>23</height>
           </rect>
          </property>
@@ -120,7 +120,7 @@
           <rect>
            <x>10</x>
            <y>20</y>
-           <width>181</width>
+           <width>191</width>
            <height>20</height>
           </rect>
          </property>
@@ -142,13 +142,13 @@
          <string>Attack Point</string>
         </property>
        </widget>
-       <widget class="QGroupBox" name="groupBox_2">
+       <widget class="QGroupBox" name="calls_box">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>50</y>
-          <width>291</width>
-          <height>181</height>
+          <y>60</y>
+          <width>301</width>
+          <height>171</height>
          </rect>
         </property>
         <property name="title">
@@ -158,7 +158,7 @@
          <property name="geometry">
           <rect>
            <x>10</x>
-           <y>40</y>
+           <y>30</y>
            <width>121</width>
            <height>131</height>
           </rect>
@@ -167,8 +167,8 @@
         <widget class="QTableWidget" name="scen_details">
          <property name="geometry">
           <rect>
-           <x>160</x>
-           <y>40</y>
+           <x>170</x>
+           <y>30</y>
            <width>121</width>
            <height>131</height>
           </rect>
@@ -191,7 +191,7 @@
         <widget class="QLabel" name="label_2">
          <property name="geometry">
           <rect>
-           <x>20</x>
+           <x>10</x>
            <y>10</y>
            <width>91</width>
            <height>16</height>
@@ -219,10 +219,23 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>340</y>
-          <width>291</width>
-          <height>161</height>
+          <y>360</y>
+          <width>301</width>
+          <height>111</height>
          </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>340</y>
+          <width>101</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Notes:</string>
         </property>
        </widget>
       </widget>
@@ -230,88 +243,24 @@
        <attribute name="title">
         <string>Analysis</string>
        </attribute>
-       <widget class="QPushButton" name="set_danger">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>181</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="mouseTracking">
-         <bool>false</bool>
-        </property>
-        <property name="acceptDrops">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Draw Obstacles</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>50</width>
-          <height>50</height>
-         </size>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="select_shelter">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>80</y>
-          <width>301</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Select Shelter</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="select_POI">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>50</y>
-          <width>181</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Select Building to Evacuate</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="get_danger">
-        <property name="geometry">
-         <rect>
-          <x>200</x>
-          <y>10</y>
-          <width>111</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Set</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="shortestRouteButton">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>110</y>
-          <width>301</width>
-          <height>23</height>
+          <x>210</x>
+          <y>160</y>
+          <width>41</width>
+          <height>41</height>
          </rect>
         </property>
         <property name="text">
-         <string>Calculate the Shortest Route</string>
+         <string/>
         </property>
        </widget>
        <widget class="QPushButton" name="desel_POI">
         <property name="geometry">
          <rect>
-          <x>200</x>
-          <y>50</y>
+          <x>20</x>
+          <y>160</y>
           <width>111</width>
           <height>23</height>
          </rect>
@@ -324,7 +273,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>170</y>
+          <y>230</y>
           <width>131</width>
           <height>161</height>
          </rect>
@@ -354,8 +303,8 @@
        <widget class="QTableWidget" name="shelter_info">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>170</y>
+          <x>180</x>
+          <y>230</y>
           <width>131</width>
           <height>161</height>
          </rect>
@@ -383,7 +332,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>340</y>
+          <y>400</y>
           <width>75</width>
           <height>23</height>
          </rect>
@@ -395,8 +344,8 @@
        <widget class="QPushButton" name="shelter_select">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>340</y>
+          <x>180</x>
+          <y>400</y>
           <width>75</width>
           <height>23</height>
          </rect>
@@ -409,7 +358,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>150</y>
+          <y>210</y>
           <width>131</width>
           <height>20</height>
          </rect>
@@ -421,8 +370,8 @@
        <widget class="QLabel" name="selectAttributeLabel_3">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>150</y>
+          <x>180</x>
+          <y>210</y>
           <width>111</width>
           <height>20</height>
          </rect>
@@ -431,14 +380,97 @@
          <string>Shelter:</string>
         </property>
        </widget>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>111</width>
+          <height>71</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Danger Zones</string>
+        </property>
+        <widget class="QPushButton" name="get_danger">
+         <property name="geometry">
+          <rect>
+           <x>60</x>
+           <y>20</y>
+           <width>41</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="set_danger">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>41</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="mouseTracking">
+          <bool>false</bool>
+         </property>
+         <property name="acceptDrops">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>50</width>
+           <height>50</height>
+          </size>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>90</y>
+          <width>301</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Select Buildings</string>
+        </property>
+        <widget class="QPushButton" name="select_POI">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>121</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>To Evacuate</string>
+         </property>
+        </widget>
+        <widget class="QPushButton" name="select_shelter">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>20</y>
+           <width>121</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Shelter</string>
+         </property>
+        </widget>
+       </widget>
       </widget>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QScrollBar" name="verticalScrollBar">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
      </widget>
     </item>
    </layout>

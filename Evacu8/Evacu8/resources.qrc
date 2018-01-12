@@ -6,5 +6,9 @@
 		<file>images/Logo.jpeg</file>
 		<file>images/Logosmall.jpeg</file>
 		<file>images/Open.png</file>
+		<file>images/Draw.jpg</file>
+		<file>images/Check.png</file>
+		<file>images/Draw1.svg</file>
+		<file>images/Route.png</file>
     </qresource>
 </RCC>
