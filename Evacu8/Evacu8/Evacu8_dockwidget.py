@@ -227,6 +227,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             vl = uf.getLegendLayerByName(self.iface, layer)
             iface.legendInterface().setLayerVisible(vl, True)
 
+        # Make half transparent Open Street Map
+        rlayer = uf.getLegendLayerByName(self.iface, "OpenStreetMap")
+        rlayer.renderer().setOpacity(0.5)  # 0.5 = 50%; 0.1 = 90%...
+        rlayer.triggerRepaint()
+
 
     # Set danger polygon
     def setDangerZone(self):
