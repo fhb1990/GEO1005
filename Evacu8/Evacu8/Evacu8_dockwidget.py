@@ -23,10 +23,11 @@
 
 import os
 import os.path
+import webbrowser
 
 from PyQt4 import QtGui, QtCore, uic
-from PyQt4.QtCore import pyqtSignal, Qt, QVariant, QSize
-from PyQt4.QtGui import QColor
+from PyQt4.QtCore import pyqtSignal, Qt, QVariant, QSize, QUrl
+from PyQt4.QtGui import QColor, QDesktopServices
 from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis, \
     QgsDistanceArea, QgsTolerance, QgsRectangle
 from qgis._gui import QgsMapToolEmitPoint, QgsRubberBand
@@ -84,8 +85,14 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_danger.setIconSize(QSize(25, 25))
         self.get_danger.setIcon(QtGui.QIcon(':images\Check.png'))
         self.get_danger.setIconSize(QSize(25, 25))
+        self.del_danger.setIcon(QtGui.QIcon(':images\Delete.png'))
+        self.del_danger.setIconSize(QSize(30, 30))
         self.shortestRouteButton.setIcon(QtGui.QIcon(':images\Route.png'))
         self.shortestRouteButton.setIconSize(QSize(30, 30))
+        self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
+        self.to_wiki1.setIconSize(QSize(30, 30))
+        self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
+        self.to_wiki2.setIconSize(QSize(30, 30))
 
         # analysis
         self.evac = QgsPoint()
@@ -113,6 +120,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.scen_list.addItems(["Bomb Threat","Shooting"])
         self.scen_list.itemClicked.connect(self.show_scen_details1)
         self.scen_list.itemClicked.connect(self.show_scen_details2)
+
+        # Open wiki
+        self.to_wiki1.clicked.connect(self.open_wiki)
+        self.to_wiki2.clicked.connect(self.open_wiki)
 
     def closeEvent(self, event):
         # disconnect interface signa
@@ -488,6 +499,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.shelter_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
 
 
+# Open the wiki
+    def open_wiki(self):
+        webbrowser.open('https://github.com/fhb1990/GEO1005_2017-18_group3/wiki')
 
 class PolyMapTool(QgsMapToolEmitPoint):
 

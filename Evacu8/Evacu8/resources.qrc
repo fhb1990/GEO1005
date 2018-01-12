@@ -10,5 +10,7 @@
 		<file>images/Check.png</file>
 		<file>images/Draw1.svg</file>
 		<file>images/Route.png</file>
+		<file>images/Delete.png</file>
+		<file>images/Info.png</file>
     </qresource>
 </RCC>
