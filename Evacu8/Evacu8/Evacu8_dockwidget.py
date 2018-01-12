@@ -111,6 +111,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.select_POI.clicked.connect(self.enterEvac)
         self.emitEvac.canvasClicked.connect(self.getEvac)
         self.desel_POI.clicked.connect(self.deleteEvac)
+        self.select_shelter.setEnabled(False)
         self.select_shelter.clicked.connect(self.enterShel)
         self.emitShel.canvasClicked.connect(self.getShel)
         self.shortestRouteButton.clicked.connect(self.buildNetwork)
@@ -349,6 +350,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def getEvac(self, evac):
         self.canvas.unsetMapTool(self.emitEvac)
+        self.select_POI.setEnabled(False)
+        self.select_shelter.setEnabled(True)
 
         if evac:
             self.evac = QgsPoint(evac)
@@ -388,6 +391,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         lineLayer.removeSelection()
         self.evac_layer.removeSelection()
         self.refreshCanvas(lineLayer)
+
+        self.select_POI.setEnabled(True)
+        self.select_shelter.setEnabled(False)
 
     def enterShel(self):
         routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
