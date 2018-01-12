@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>347</width>
-    <height>877</height>
+    <width>343</width>
+    <height>589</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -55,65 +55,14 @@
        <widget class="QPushButton" name="set_pt">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>50</y>
-          <width>181</width>
-          <height>23</height>
+          <x>170</x>
+          <y>10</y>
+          <width>131</width>
+          <height>31</height>
          </rect>
         </property>
         <property name="text">
          <string>Set Attack Point</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="selectAttributeLabel">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>100</y>
-          <width>595</width>
-          <height>13</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Perimeter radius in meters:</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="buff_area">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>120</y>
-          <width>181</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="set_rad">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>160</y>
-          <width>181</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Create Perimeter</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>64</width>
-          <height>64</height>
-         </size>
         </property>
        </widget>
        <widget class="QPushButton" name="load_scen">
@@ -122,7 +71,7 @@
           <x>10</x>
           <y>10</y>
           <width>31</width>
-          <height>28</height>
+          <height>31</height>
          </rect>
         </property>
         <property name="text">
@@ -133,14 +82,125 @@
         <property name="geometry">
          <rect>
           <x>50</x>
-          <y>15</y>
+          <y>10</y>
           <width>91</width>
-          <height>21</height>
+          <height>30</height>
          </rect>
         </property>
         <property name="text">
          <string>Load Scenario</string>
         </property>
+       </widget>
+       <widget class="QListWidget" name="scen_list">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>70</y>
+          <width>131</width>
+          <height>171</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QTableWidget" name="scen_details">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>70</y>
+          <width>131</width>
+          <height>171</height>
+         </rect>
+        </property>
+        <property name="rowCount">
+         <number>4</number>
+        </property>
+        <property name="columnCount">
+         <number>1</number>
+        </property>
+        <attribute name="horizontalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+        <row/>
+        <row/>
+        <row/>
+        <row/>
+        <column/>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>91</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Incoming Calls</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>50</y>
+          <width>91</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Call Details</string>
+        </property>
+       </widget>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>250</y>
+          <width>221</width>
+          <height>81</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string>Evacuation Zone (in m):</string>
+        </property>
+        <widget class="QPushButton" name="set_rad">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>50</y>
+           <width>181</width>
+           <height>23</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Create Evacuation Zone</string>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>64</width>
+           <height>64</height>
+          </size>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="buff_area">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>181</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+        </widget>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -346,19 +406,6 @@
         </property>
         <property name="text">
          <string>Shelter:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="legend">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>360</y>
-          <width>301</width>
-          <height>221</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Legend Goes Here</string>
         </property>
        </widget>
       </widget>

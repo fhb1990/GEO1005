@@ -77,7 +77,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # set images and icons
         self.logo.setPixmap(QtGui.QPixmap(':images\Logosmall.jpeg'))
-        self.legend.setPixmap(QtGui.QPixmap(':images\Legend.png'))
+        self.load_scen.setIcon(QtGui.QIcon(':images\Open.png'))
 
         # analysis
         self.evac = None
@@ -100,6 +100,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.tied_points = []
         self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Pop.","Dist."])
         self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Cap.","Route"])
+        self.scen_details.setVerticalHeaderLabels(["Time", "Type", "Adr.", "Level"])
+        self.scen_list.addItems(["Bomb Threat","Shooting"])
+        self.scen_list.itemClicked.connect(self.show_scen_details1)
+        self.scen_list.itemClicked.connect(self.show_scen_details2)
 
     def closeEvent(self, event):
         # disconnect interface signa
@@ -458,6 +462,22 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.canvas.refresh()
 
     # Displaying information
+
+    def show_scen_details1(self,item):
+        if str(item.text()) == "Bomb Threat":
+            values = ["11:34","Bomb Threat","Rotterdam Centraal","3"]
+            for i, item in enumerate(values):
+                # i is the table row, items must be added as QTableWidgetItems
+                self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+
+    def show_scen_details2(self,item):
+        if str(item.text()) == "Shooting":
+            values = ["11:55","Shooting","Lijnbaan 5, Rotterdam","5"]
+            for i, item in enumerate(values):
+                # i is the table row, items must be added as QTableWidgetItems
+                self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+
+
     def to_evac_table(self):
         tent_values = self.evac_feat.attributes()
         indices = [2,3,7,8,9]
