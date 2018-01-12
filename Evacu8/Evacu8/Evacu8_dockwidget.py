@@ -80,15 +80,15 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.load_scen.setIcon(QtGui.QIcon(':images\Open.png'))
 
         # analysis
-        self.evac = None
+        self.evac = QgsPoint()
         self.evacId = int()
-        self.shel = None
+        self.shel = QgsPoint()
         self.shelId = int()
 
-        self.evac_layer = None
-        self.evac_feat = None
-        self.shel_layer = None
-        self.shel_feat = None
+        self.evac_layer = QgsVectorLayer()
+        self.evac_feat = QgsFeature()
+        self.shel_layer = QgsVectorLayer()
+        self.shel_feat = QgsFeature()
 
         self.select_POI.clicked.connect(self.enterEvac)
         self.emitEvac.canvasClicked.connect(self.getEvac)
@@ -97,6 +97,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitShel.canvasClicked.connect(self.getShel)
         self.shortestRouteButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
+        self.network_layer = QgsVectorLayer()
         self.tied_points = []
         self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Pop.","Dist."])
         self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Cap.","Route"])
@@ -293,25 +294,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.canvas.unsetMapTool(self.emitEvac)
 
         if evac:
-            lineLayer = uf.getLegendLayerByName(iface, "road_net")
-            provider = lineLayer.dataProvider()
-
-            spIndex = QgsSpatialIndex()  # create spatial index object
-
-            feat = QgsFeature()
-            fit = provider.getFeatures()  # gets all features in layer
-
-            # insert features to index
-            while fit.nextFeature(feat):
-                spIndex.insertFeature(feat)
-
             self.evac = QgsPoint(evac)
-
-            # QgsSpatialIndex.nearestNeighbor (QgsPoint point, int neighbors)
-            nearestIds = spIndex.nearestNeighbor(self.evac, 1)  # we need only one neighbour
-            self.evacId = nearestIds[0]
-            lineLayer.select(self.evacId)
-
             self.evac_layer, self.evac_feat = self.select(self.evac)
             self.to_evac_table()
 
@@ -363,25 +346,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.canvas.unsetMapTool(self.emitShel)
 
         if shel:
-            lineLayer = uf.getLegendLayerByName(iface, "road_net")
-            provider = lineLayer.dataProvider()
-
-            spIndex = QgsSpatialIndex()  # create spatial index object
-
-            feat = QgsFeature()
-            fit = provider.getFeatures()  # gets all features in layer
-
-            # insert features to index
-            while fit.nextFeature(feat):
-                spIndex.insertFeature(feat)
-
             self.shel = QgsPoint(shel)
-
-            # QgsSpatialIndex.nearestNeighbor (QgsPoint point, int neighbors)
-            nearestIds = spIndex.nearestNeighbor(self.shel, 1)  # we need only one neighbour
-            self.shelId = nearestIds[0]
-            lineLayer.select(self.shelId)
-
             self.shel_layer, self.shel_feat = self.select(self.shel)
             self.shelter_table()
 
@@ -410,7 +375,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             # get the points to be used as origin and destination
             # in this case gets the centroid of the selected features
             selected_sources = uf.getLegendLayerByName(self.iface, "road_net").selectedFeatures()
-            source_points = [feature.geometry().centroid().asPoint() for feature in selected_sources]
+            source_points = [self.evac, self.shel]
             # build the graph including these points
             if len(source_points) > 1:
                 self.graph, self.tied_points = uf.makeUndirectedGraph(self.network_layer, source_points)

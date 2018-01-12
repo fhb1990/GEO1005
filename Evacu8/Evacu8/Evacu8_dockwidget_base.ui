@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>343</width>
+    <width>366</width>
     <height>589</height>
    </rect>
   </property>
@@ -52,19 +52,6 @@
        <attribute name="title">
         <string>Set scenario</string>
        </attribute>
-       <widget class="QPushButton" name="set_pt">
-        <property name="geometry">
-         <rect>
-          <x>170</x>
-          <y>10</y>
-          <width>131</width>
-          <height>31</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Set Attack Point</string>
-        </property>
-       </widget>
        <widget class="QPushButton" name="load_scen">
         <property name="geometry">
          <rect>
@@ -91,72 +78,12 @@
          <string>Load Scenario</string>
         </property>
        </widget>
-       <widget class="QListWidget" name="scen_list">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>70</y>
-          <width>131</width>
-          <height>171</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QTableWidget" name="scen_details">
-        <property name="geometry">
-         <rect>
-          <x>170</x>
-          <y>70</y>
-          <width>131</width>
-          <height>171</height>
-         </rect>
-        </property>
-        <property name="rowCount">
-         <number>4</number>
-        </property>
-        <property name="columnCount">
-         <number>1</number>
-        </property>
-        <attribute name="horizontalHeaderVisible">
-         <bool>false</bool>
-        </attribute>
-        <row/>
-        <row/>
-        <row/>
-        <row/>
-        <column/>
-       </widget>
-       <widget class="QLabel" name="label_2">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>50</y>
-          <width>91</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Incoming Calls</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_3">
-        <property name="geometry">
-         <rect>
-          <x>170</x>
-          <y>50</y>
-          <width>91</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Call Details</string>
-        </property>
-       </widget>
        <widget class="QGroupBox" name="groupBox">
         <property name="geometry">
          <rect>
-          <x>10</x>
+          <x>100</x>
           <y>250</y>
-          <width>221</width>
+          <width>201</width>
           <height>81</height>
          </rect>
         </property>
@@ -201,6 +128,102 @@
           <string/>
          </property>
         </widget>
+       </widget>
+       <widget class="QPushButton" name="set_pt">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>250</y>
+          <width>81</width>
+          <height>81</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Attack Point</string>
+        </property>
+       </widget>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>291</width>
+          <height>181</height>
+         </rect>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <widget class="QListWidget" name="scen_list">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>40</y>
+           <width>121</width>
+           <height>131</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QTableWidget" name="scen_details">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>40</y>
+           <width>121</width>
+           <height>131</height>
+          </rect>
+         </property>
+         <property name="rowCount">
+          <number>4</number>
+         </property>
+         <property name="columnCount">
+          <number>1</number>
+         </property>
+         <attribute name="horizontalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <row/>
+         <row/>
+         <row/>
+         <row/>
+         <column/>
+        </widget>
+        <widget class="QLabel" name="label_2">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>10</y>
+           <width>91</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Incoming Calls</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_3">
+         <property name="geometry">
+          <rect>
+           <x>170</x>
+           <y>10</y>
+           <width>91</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Call Details</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QTextEdit" name="textEdit">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>340</y>
+          <width>291</width>
+          <height>161</height>
+         </rect>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
@@ -409,6 +432,13 @@
         </property>
        </widget>
       </widget>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QScrollBar" name="verticalScrollBar">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
      </widget>
     </item>
    </layout>
