@@ -392,6 +392,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.evac_layer.removeSelection()
         self.refreshCanvas(lineLayer)
 
+        item = ''
+        for i in range(5):
+            # i is the table row, items must be added as QTableWidgetItems
+            self.to_evac_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+
         self.select_POI.setEnabled(True)
         self.select_shelter.setEnabled(False)
 
@@ -516,17 +521,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.to_evac_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
 
     def shelter_table(self):
-        if len(QgsMapLayerRegistry.instance().mapLayersByName('Routes')) == 0:
-            return
-        layer = uf.getLegendLayerByName(self.iface, "Schools points")
-        feat = layer.selectedFeatures()
-        tent_values = feat[0].attributes()
+        tent_values = self.shel_feat.attributes()
         indices = [2, 3, 7, 8]
         values = [tent_values[i] for i in indices]
-        route = uf.getLegendLayerByName(self.iface, "Routes")
-        feat = route.getFeatures()
 
-        # values.append[ROUTE LENGTH]
         # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
         for i, item in enumerate(values):
             # i is the table row, items must tbe added as QTableWidgetItems
