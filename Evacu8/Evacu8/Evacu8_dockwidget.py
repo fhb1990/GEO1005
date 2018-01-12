@@ -75,7 +75,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.get_danger.clicked.connect(self.getDangerZone)
 
         # set images and icons
-        self.logo.setPixmap(QtGui.QPixmap(':images\Logo.jpeg'))
+        self.logo.setPixmap(QtGui.QPixmap(':images\Logosmall.jpeg'))
         self.legend.setPixmap(QtGui.QPixmap(':images\Legend.png'))
 
         # analysis

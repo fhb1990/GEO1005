@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>384</width>
-    <height>671</height>
+    <width>348</width>
+    <height>877</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,41 +20,28 @@
       <property name="currentIndex">
        <number>1</number>
       </property>
-      <widget class="QWidget" name="tab_1">
+      <widget class="QWidget" name="Tab1">
        <attribute name="title">
-        <string>Tab 1</string>
+        <string>Set scenario</string>
        </attribute>
        <widget class="QPushButton" name="set_pt">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>40</y>
+          <y>50</y>
           <width>181</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Set the point of the attack (set_pt)</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="load_scen">
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>10</y>
-          <width>181</width>
-          <height>23</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Load scenario (load_scen)</string>
+         <string>Set Attack Point</string>
         </property>
        </widget>
        <widget class="QLabel" name="selectAttributeLabel">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>70</y>
+          <y>100</y>
           <width>595</width>
           <height>13</height>
          </rect>
@@ -67,20 +54,20 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>90</y>
+          <y>120</y>
           <width>181</width>
           <height>20</height>
          </rect>
         </property>
         <property name="text">
-         <string>(buff_area)</string>
+         <string/>
         </property>
        </widget>
        <widget class="QPushButton" name="set_rad">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>120</y>
+          <y>160</y>
           <width>181</width>
           <height>23</height>
          </rect>
@@ -92,7 +79,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Create buffer (set_rad)</string>
+         <string>Create Perimeter</string>
         </property>
         <property name="iconSize">
          <size>
@@ -101,17 +88,30 @@
          </size>
         </property>
        </widget>
+       <widget class="QPushButton" name="load_scen">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>181</width>
+          <height>28</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load scenario</string>
+        </property>
+       </widget>
       </widget>
       <widget class="QWidget" name="tab_2">
        <attribute name="title">
-        <string>Tab 2</string>
+        <string>Analysis</string>
        </attribute>
        <widget class="QPushButton" name="set_danger">
         <property name="geometry">
          <rect>
           <x>10</x>
           <y>10</y>
-          <width>281</width>
+          <width>181</width>
           <height>23</height>
          </rect>
         </property>
@@ -122,7 +122,7 @@
          <bool>false</bool>
         </property>
         <property name="text">
-         <string>Set danger zone (set_danger)</string>
+         <string>Draw Obstacles</string>
         </property>
         <property name="iconSize">
          <size>
@@ -135,72 +135,72 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>130</y>
-          <width>281</width>
+          <y>80</y>
+          <width>301</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Select shelter (select_shelter)</string>
+         <string>Select Shelter</string>
         </property>
        </widget>
        <widget class="QPushButton" name="select_POI">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>68</y>
-          <width>281</width>
+          <y>50</y>
+          <width>181</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Select building to evacuate (select_POI)</string>
+         <string>Select Building to Evacuate</string>
         </property>
        </widget>
        <widget class="QPushButton" name="get_danger">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>39</y>
-          <width>281</width>
+          <x>200</x>
+          <y>10</y>
+          <width>111</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Get danger zone (get_danger)</string>
+         <string>Set</string>
         </property>
        </widget>
        <widget class="QPushButton" name="shortestRouteButton">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>160</y>
-          <width>281</width>
+          <y>110</y>
+          <width>301</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Shortest Route (shortestRouteButton)</string>
+         <string>Calculate the Shortest Route</string>
         </property>
        </widget>
        <widget class="QPushButton" name="desel_POI">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>100</y>
-          <width>281</width>
+          <x>200</x>
+          <y>50</y>
+          <width>111</width>
           <height>23</height>
          </rect>
         </property>
         <property name="text">
-         <string>Deselect building to evacuate (desel_POI)</string>
+         <string>Clear Selection</string>
         </property>
        </widget>
        <widget class="QTableWidget" name="to_evac_info">
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>210</y>
+          <y>160</y>
           <width>131</width>
           <height>161</height>
          </rect>
@@ -231,7 +231,7 @@
         <property name="geometry">
          <rect>
           <x>160</x>
-          <y>210</y>
+          <y>160</y>
           <width>131</width>
           <height>161</height>
          </rect>
@@ -259,7 +259,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>380</y>
+          <y>330</y>
           <width>75</width>
           <height>23</height>
          </rect>
@@ -272,7 +272,7 @@
         <property name="geometry">
          <rect>
           <x>160</x>
-          <y>380</y>
+          <y>330</y>
           <width>75</width>
           <height>23</height>
          </rect>
@@ -285,7 +285,7 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>190</y>
+          <y>140</y>
           <width>111</width>
           <height>20</height>
          </rect>
@@ -298,7 +298,7 @@
         <property name="geometry">
          <rect>
           <x>160</x>
-          <y>190</y>
+          <y>140</y>
           <width>111</width>
           <height>20</height>
          </rect>
@@ -311,9 +311,9 @@
         <property name="geometry">
          <rect>
           <x>10</x>
-          <y>410</y>
+          <y>360</y>
           <width>301</width>
-          <height>131</height>
+          <height>221</height>
          </rect>
         </property>
         <property name="text">
