@@ -65,6 +65,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.toolPoly = PolyMapTool(self.canvas)
         self.emitEvac = QgsMapToolEmitPoint(self.canvas)
         self.emitShel = QgsMapToolEmitPoint(self.canvas)
+        self.emitDel = QgsMapToolEmitPoint(self.canvas)
 
         # set up GUI operation signals
         # data
@@ -76,6 +77,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # self.set_rad.clicked.connect(self.POI_selection)
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
+        self.del_danger.clicked.connect(self.delDangerZone)
+        self.emitDel.canvasClicked.connect(self.get_del)
 
         # set images and icons
         self.logo.setPixmap(QtGui.QPixmap(':images\Logosmall.jpeg'))
@@ -276,6 +279,31 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     def getDangerZone(self):
         self.canvas.unsetMapTool(self.toolPoly)
 
+    def delDangerZone(self):
+        self.canvas.unsetMapTool(self.toolPoly)
+        self.canvas.setMapTool(self.emitDel)
+
+    def get_del(self, delete):
+        self.canvas.unsetMapTool(self.emitDel)
+
+        if delete:
+            layer = "Danger Zones"
+
+            min_dist = QgsDistanceArea()
+            vl = uf.getLegendLayerByName(self.iface, layer)
+            point = QgsPoint(delete)
+            feats = vl.getFeatures()
+            for feat in feats:
+                geom = feat.geometry()
+                pt = geom.centroid().asPoint()
+                dist = QgsDistanceArea().measureLine(point, pt)
+                if dist < min_dist:
+                    min_dist = dist
+                    fid = feat.id()
+
+            vl.startEditing()
+            vl.deleteFeature(fid)
+            vl.commitChanges()
 
     #POI selection#
     # def POI_selection(self, mapPoint):
