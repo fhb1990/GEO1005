@@ -71,6 +71,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_pt.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
         self.set_rad.clicked.connect(self.calculateBuffer)
+        self.set_rad.setEnabled(False)
         # self.set_rad.clicked.connect(self.POI_selection)
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
@@ -123,6 +124,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     #Open Scenario
     def openScenario(self,filename=""):
         self.iface.addProject(unicode(self.plugin_dir+"/data/Evacu8_dataset.qgs"))
+        self.set_rad.setEnabled(False)
         # scenario_open = False
         # scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
         # # check if file exists
@@ -139,12 +141,14 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # Attack Point
     def enterPoi(self):
-        # remember currently selected tool
-        self.userTool = self.canvas.mapTool()
-        # activate coordinate capture tool
-        self.canvas.setMapTool(self.emitPoint)
+        if not(QgsMapLayerRegistry.instance().mapLayersByName('Attack Point')):
+            # remember currently selected tool
+            self.userTool = self.canvas.mapTool()
+            # activate coordinate capture tool
+            self.canvas.setMapTool(self.emitPoint)
 
-    def getPoint(self, mapPoint, mouseButton):
+    def getPoint(self, mapPoint):
+        self.set_rad.setEnabled(True)
         # change tool so you don't get more than one POI
         self.canvas.unsetMapTool(self.emitPoint)
         self.canvas.setMapTool(self.userTool)
@@ -206,48 +210,52 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         origins = layer.getFeatures()
         if origins > 0:
             cutoff_distance = self.getBufferCutoff()
-            buffers = {}
-            for point in origins:
-                geom = point.geometry()
-                buffers[point.id()] = geom.buffer(cutoff_distance,12).asPolygon()
-            # store the buffer results in temporary layer called "Buffers"
-            buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
-            # create one if it doesn't exist
-            if not buffer_layer:
-                attribs = ['id', 'distance']
-                types = [QtCore.QVariant.String, QtCore.QVariant.Double]
-                buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 70)
-                uf.loadTempLayer(buffer_layer)
-                buffer_layer.setLayerName('Buffers')
-                symbols = buffer_layer.rendererV2().symbols()
-                symbol = symbols[0]
-                symbol.setColor(QColor.fromRgb(220, 220, 0))
-            # insert buffer polygons
-            geoms = []
-            values = []
-            for buffer in buffers.iteritems():
-                # each buffer has an id and a geometry
-                geoms.append(buffer[1])
-                # in the case of values, it expects a list of multiple values in each item - list of lists
-                values.append([buffer[0],cutoff_distance])
-            uf.insertTempFeatures(buffer_layer, geoms, values)
-            self.refreshCanvas(buffer_layer)
+            if cutoff_distance:
+                if (QgsMapLayerRegistry.instance().mapLayersByName("Buffers")):
+                    buffer_layer =  uf.getLegendLayerByName(self.iface, "Buffers")
+                    QgsMapLayerRegistry.instance().removeMapLayer(buffer_layer.id())
+                buffers = {}
+                for point in origins:
+                    geom = point.geometry()
+                    buffers[point.id()] = geom.buffer(cutoff_distance,12).asPolygon()
+                # store the buffer results in temporary layer called "Buffers"
+                buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+                # create one if it doesn't exist
+                if not buffer_layer:
+                    attribs = ['id', 'distance']
+                    types = [QtCore.QVariant.String, QtCore.QVariant.Double]
+                    buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 70)
+                    uf.loadTempLayer(buffer_layer)
+                    buffer_layer.setLayerName('Buffers')
+                    symbols = buffer_layer.rendererV2().symbols()
+                    symbol = symbols[0]
+                    symbol.setColor(QColor.fromRgb(220, 220, 0))
+                # insert buffer polygons
+                geoms = []
+                values = []
+                for buffer in buffers.iteritems():
+                    # each buffer has an id and a geometry
+                    geoms.append(buffer[1])
+                    # in the case of values, it expects a list of multiple values in each item - list of lists
+                    values.append([buffer[0],cutoff_distance])
+                uf.insertTempFeatures(buffer_layer, geoms, values)
+                self.refreshCanvas(buffer_layer)
 
-            extent = buffer_layer.extent()
-            self.canvas.setExtent(extent)
+                extent = buffer_layer.extent()
+                self.canvas.setExtent(extent)
 
-        layers = ["Schools points", "Hospitals points", "Nursery Homes points", "road_net"]
-        for layer in layers:
-            vl = uf.getLegendLayerByName(self.iface, layer)
-            iface.legendInterface().setLayerVisible(vl, True)
+                layers = ["Schools points", "Hospitals points", "Nursery Homes points", "road_net"]
+                for layer in layers:
+                    vl = uf.getLegendLayerByName(self.iface, layer)
+                    iface.legendInterface().setLayerVisible(vl, True)
 
-        # Make half transparent Open Street Map
-        rlayer = uf.getLegendLayerByName(self.iface, "OpenStreetMap")
-        rlayer.renderer().setOpacity(0.5)  # 0.5 = 50%; 0.1 = 90%...
-        rlayer.triggerRepaint()
+                # Make half transparent Open Street Map
+                rlayer = uf.getLegendLayerByName(self.iface, "OpenStreetMap")
+                rlayer.renderer().setOpacity(0.5)  # 0.5 = 50%; 0.1 = 90%...
+                rlayer.triggerRepaint()
 
-        #jump to tab 2
-        self.tabs.setCurrentIndex(1)
+                #jump to tab 2
+                self.tabs.setCurrentIndex(1)
 
 
     # Set danger polygon
