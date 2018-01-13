@@ -24,6 +24,7 @@
 import os
 import os.path
 import webbrowser
+from time import localtime, strftime
 
 from PyQt4 import QtGui, QtCore, uic
 from PyQt4.QtCore import pyqtSignal, Qt, QVariant, QSize, QUrl
@@ -74,6 +75,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitPoint.canvasClicked.connect(self.getPoint)
         self.set_rad.clicked.connect(self.calculateBuffer)
         self.set_rad.setEnabled(False)
+        self.send_notes.clicked.connect(self.sendNotes)
         # self.set_rad.clicked.connect(self.POI_selection)
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
@@ -91,7 +93,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.del_danger.setIcon(QtGui.QIcon(':images\Delete.png'))
         self.del_danger.setIconSize(QSize(30, 30))
         self.shortestRouteButton.setIcon(QtGui.QIcon(':images\Route.png'))
-        self.shortestRouteButton.setIconSize(QSize(30, 30))
+        self.shortestRouteButton.setIconSize(QSize(50, 50))
         self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
         self.to_wiki1.setIconSize(QSize(30, 30))
         self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
@@ -129,6 +131,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Open wiki
         self.to_wiki1.clicked.connect(self.open_wiki)
         self.to_wiki2.clicked.connect(self.open_wiki)
+
+        self.big_button.clicked.connect(self.evacuateThis)
+        self.warning_msg.setVisible(False)
+        self.big_button.setEnabled(False)
 
     def closeEvent(self, event):
         # disconnect interface signa
@@ -322,6 +328,17 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.load_style(names, styles)
         self.intersectANDdelete()
 
+    # Making notes and sending to log
+    def getNotes(self):
+        notes = self.notes_box.toPlainText()
+        if len(notes) > 0:
+            self.notes_box.clear()
+            return notes
+
+    def sendNotes(self):
+        time = strftime("%d-%m-%Y %H:%M:%S", localtime())
+        notes = time + ": " + self.getNotes() + "\n"
+        self.log.append(notes)
 
     # Set danger polygon
     def setDangerZone(self):
@@ -454,6 +471,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.select_POI.setEnabled(True)
         self.select_shelter.setEnabled(False)
         self.shortestRouteButton.setEnabled(False)
+        self.warning_msg.setVisible(False)
+        self.big_button.setEnabled(False)
+
 
     def enterShel(self):
         self.shortestRouteButton.setEnabled(False)
@@ -550,6 +570,12 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             lineLayer = uf.getLegendLayerByName(iface, "road_net")
             lineLayer.deselect(self.shelId)
             self.refreshCanvas(lineLayer)
+            cap = int(self.shelter_info.item(3, 0).text())
+            pop = int(self.to_evac_info.item(3, 0).text())
+            if cap - pop < 0:
+                self.big_button.setEnabled(False)
+            else:
+                self.big_button.setEnabled(True)
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
@@ -593,11 +619,44 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         for i, item in enumerate(values):
             # i is the table row, items must tbe added as QTableWidgetItems
             self.shelter_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+        cap = values[3]
+        pop = int(self.to_evac_info.item(3,0).text())
+        if cap - pop < 0:
+            self.warning_msg.setVisible(True)
+        else:
+            self.warning_msg.setVisible(False)
+        self.big_button.setEnabled(False)
 
 
 # Open the wiki
     def open_wiki(self):
         webbrowser.open('https://github.com/fhb1990/GEO1005_2017-18_group3/wiki')
+
+# Combine toEvacuate building and shelter
+
+    def evacuateThis(self):
+        # Write to log
+        time = strftime("%d-%m-%Y %H:%M:%S", localtime())
+        evac_type = self.to_evac_info.item(0, 0).text()
+        to_evac = self.to_evac_info.item(1, 0).text()
+        adr = self.to_evac_info.item(2, 0).text()
+        pop = int(self.to_evac_info.item(3, 0).text())
+        log_str = time + ":" + "\nBuilding selected for evacuation." \
+                               "\nType:\t%s\nName:\t%s\nAddress:\t%s\nPredicted pop:\t%d\n" %(evac_type, to_evac, adr, pop)
+        self.log.append(log_str)
+
+        evac_type = self.shelter_info.item(0, 0).text()
+        to_evac = self.shelter_info.item(1, 0).text()
+        adr = self.shelter_info.item(2, 0).text()
+        log_str = "Evacuate to:\nType:\t%s\nName:\t%s\nAddress:\t%s\n" %(evac_type, to_evac, adr)
+        self.log.append(log_str)
+        # Mark things as DONE
+
+        # Lower capacity of shelter
+
+        # Clear selections to start picking new targets
+        self.deleteEvac()
+
 
 class PolyMapTool(QgsMapToolEmitPoint):
 
