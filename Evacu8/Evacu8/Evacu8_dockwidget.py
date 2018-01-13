@@ -114,6 +114,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.select_shelter.setEnabled(False)
         self.select_shelter.clicked.connect(self.enterShel)
         self.emitShel.canvasClicked.connect(self.getShel)
+        self.shortestRouteButton.setEnabled(False)
         self.shortestRouteButton.clicked.connect(self.buildNetwork)
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
         self.network_layer = QgsVectorLayer()
@@ -207,7 +208,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             for feat in feats:
                 geom = feat.geometry()
                 pt = geom.asPoint()
-                m = dist.measureLine(self.atk_pt, pt)
+                m = dist.measureLine(self.atk_pt, pt)//1
                 vl.changeAttributeValue(feat.id(), index, m)
             vl.commitChanges()
 
@@ -396,11 +397,14 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         for i in range(5):
             # i is the table row, items must be added as QTableWidgetItems
             self.to_evac_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+            self.shelter_info.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
 
         self.select_POI.setEnabled(True)
         self.select_shelter.setEnabled(False)
+        self.shortestRouteButton.setEnabled(False)
 
     def enterShel(self):
+        self.shortestRouteButton.setEnabled(False)
         routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
         if routes_layer:
             QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
@@ -417,6 +421,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.shel = QgsPoint(shel)
             self.shel_layer, self.shel_feat = self.select(self.shel)
             self.shelter_table()
+        if self.evac and self.shel:
+            self.shortestRouteButton.setEnabled(True)
 
 
     # route functions
@@ -477,11 +483,17 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 symbol.setColor(QColor.fromRgb(250,50,50))
 
                 uf.loadTempLayer(routes_layer)
-            # insert route line
-            for route in routes_layer.getFeatures():
-                pass
-            uf.insertTempFeatures(routes_layer, [path], [['testing', 100.00]])
+            # calculate route length
+            d = 0
+            for i in range(len(path)-1):
+                pt1 = path[i]
+                pt2 = path[i+1]
+                dx = pt2[0] - pt1[0]
+                dy = pt2[1] - pt1[1]
+                d += ((dx**2 + dy**2)**0.5)//1
+            uf.insertTempFeatures(routes_layer, [path], [['testing']])
             self.refreshCanvas(routes_layer)
+            self.shelter_info.setItem(4, 0, QtGui.QTableWidgetItem(unicode(d)))
 
             lineLayer = uf.getLegendLayerByName(iface, "road_net")
             lineLayer.deselect(self.shelId)
