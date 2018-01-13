@@ -479,7 +479,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 uf.loadTempLayer(routes_layer)
             # insert route line
             for route in routes_layer.getFeatures():
-                print route.id()
+                pass
             uf.insertTempFeatures(routes_layer, [path], [['testing', 100.00]])
             self.refreshCanvas(routes_layer)
 
