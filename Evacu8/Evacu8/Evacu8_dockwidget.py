@@ -390,7 +390,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
         lineLayer = uf.getLegendLayerByName(iface, "road_net")
         lineLayer.removeSelection()
-        self.evac_layer.removeSelection()
+
+        layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+        for layer in layers:
+            uf.getLegendLayerByName(self.iface, layer).removeSelection()
         self.refreshCanvas(lineLayer)
 
         item = ''
