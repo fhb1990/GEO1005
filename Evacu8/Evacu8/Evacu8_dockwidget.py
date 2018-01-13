@@ -139,7 +139,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     ##Functions##
     #Open Scenario
     def openScenario(self,filename=""):
-        self.iface.addProject(unicode(self.plugin_dir+"/data/Evacu8_dataset.qgs"))
+        self.iface.addProject(unicode(self.plugin_dir+"/data/Evacu8_dataset_new.qgs"))
         self.set_rad.setEnabled(False)
         # scenario_open = False
         # scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
@@ -196,7 +196,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def distance(self):
-        layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+        layers = ["POI_Evacu8"]
         for layer in layers:
             vl = uf.getLegendLayerByName(self.iface, layer)
             uf.addFields(vl, ['distance'], [QVariant.Double])
@@ -212,6 +212,49 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 vl.changeAttributeValue(feat.id(), index, m)
             vl.commitChanges()
 
+    # DUPLICATE POI LAYER
+    def dup_layer(self, crs, names):
+        for name in names:
+            layer = uf.getLegendLayerByName(self.iface, "POI_Evacu8")
+            layer_type = {'0': 'Point', '1': 'LineString', '2': 'Polygon'}
+            mem_layer = QgsVectorLayer(layer_type[str(layer.geometryType())] + "?crs=epsg:" + str(crs), name,
+                                       "memory")
+            feats = [feat for feat in layer.getFeatures()]
+            mem_layer_data = mem_layer.dataProvider()
+            attr = layer.dataProvider().fields().toList()
+            mem_layer_data.addAttributes(attr)
+            mem_layer.updateFields()
+            mem_layer_data.addFeatures(feats)
+            QgsMapLayerRegistry.instance().addMapLayer(mem_layer)
+
+    # LOAD STYLE
+    def load_style(self, names, styles):
+        for name, style in zip(names, styles):
+            layer = uf.getLegendLayerByName(self.iface, name)
+            qml_path = self.plugin_dir + "/data/" + style
+            layer.loadNamedStyle(qml_path)
+            layer.triggerRepaint()
+
+    # SELECT AND DELETE
+    def intersectANDdelete(self):
+        lay1 = uf.getLegendLayerByName(self.iface, "Buffers")
+        lay2 = uf.getLegendLayerByName(self.iface, "POI_Evacu8_out")
+        lay3 = uf.getLegendLayerByName(self.iface, "POI_Evacu8_in")
+        if lay1 and lay2:
+            to_delete = uf.getFeaturesByIntersection(lay2, lay1, True)
+
+            lay2.startEditing()
+            for feat in to_delete:
+                lay2.deleteFeature(feat.id())
+            lay2.commitChanges()
+
+        if lay1 and lay3:
+            to_delete2 = uf.getFeaturesByIntersection(lay3, lay1, False)
+
+            lay3.startEditing()
+            for feat in to_delete2:
+                lay3.deleteFeature(feat.id())
+            lay3.commitChanges()
 
     # buffer functions
     def getBufferCutoff(self):
@@ -260,7 +303,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 extent = buffer_layer.extent()
                 self.canvas.setExtent(extent)
 
-                layers = ["Schools points", "Hospitals points", "Nursery Homes points", "road_net"]
+                layers = ["road_net"]
                 for layer in layers:
                     vl = uf.getLegendLayerByName(self.iface, layer)
                     iface.legendInterface().setLayerVisible(vl, True)
@@ -272,6 +315,12 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
                 #jump to tab 2
                 self.tabs.setCurrentIndex(1)
+
+        names = ["POI_Evacu8_in", "POI_Evacu8_out"]
+        styles = ["style.qml", "style2.qml"]
+        self.dup_layer(28992, names)
+        self.load_style(names, styles)
+        self.intersectANDdelete()
 
 
     # Set danger polygon
@@ -360,7 +409,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.to_evac_table()
 
     def select(self, point):
-        layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+        layers = ["POI_Evacu8_in", "POI_Evacu8_out"]
 
         min_dist = QgsDistanceArea()
         min_layer = QgsVectorLayer()
@@ -391,7 +440,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         lineLayer = uf.getLegendLayerByName(iface, "road_net")
         lineLayer.removeSelection()
 
-        layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
+        layers = ["POI_Evacu8_in", "POI_Evacu8_out"]
         for layer in layers:
             uf.getLegendLayerByName(self.iface, layer).removeSelection()
         self.refreshCanvas(lineLayer)
@@ -537,7 +586,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def shelter_table(self):
         tent_values = self.shel_feat.attributes()
-        indices = [2, 3, 7, 8]
+        indices = [2,3,7,8]
         values = [tent_values[i] for i in indices]
 
         # takes a list of label / value pairs, can be tuples or lists. not dictionaries to control order
