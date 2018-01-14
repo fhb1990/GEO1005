@@ -71,6 +71,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # set up GUI operation signals
         # data
         self.load_scen.clicked.connect(self.openScenario)
+        self.tabs.setTabEnabled(1, False)
         self.set_pt.clicked.connect(self.enterPoi)
         self.emitPoint.canvasClicked.connect(self.getPoint)
         self.set_rad.clicked.connect(self.calculateBuffer)
@@ -133,8 +134,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.to_wiki2.clicked.connect(self.open_wiki)
 
         self.big_button.clicked.connect(self.evacuateThis)
-        self.warning_msg.setVisible(False)
         self.big_button.setEnabled(False)
+        self.warning_msg.setVisible(False)
 
     def closeEvent(self, event):
         # disconnect interface signa
@@ -181,10 +182,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Specify the geometry type
             layer = QgsVectorLayer('Point?crs=epsg:28992', 'Attack Point', 'memory')
 
-            symbols = layer.rendererV2().symbols()
-            symbol = symbols[0]
-            symbol.setSize(5)
-            symbol.setColor(QColor.fromRgb(50, 50, 250))
+            style = "style_attack.qml"
+            qml_path = self.plugin_dir + "/data/" + style
+            layer.loadNamedStyle(qml_path)
+            layer.triggerRepaint()
 
             # Set the provider to accept the data source
             prov = layer.dataProvider()
@@ -244,8 +245,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     # SELECT AND DELETE
     def intersectANDdelete(self):
         lay1 = uf.getLegendLayerByName(self.iface, "Buffers")
-        lay2 = uf.getLegendLayerByName(self.iface, "POI_Evacu8_out")
-        lay3 = uf.getLegendLayerByName(self.iface, "POI_Evacu8_in")
+        lay2 = uf.getLegendLayerByName(self.iface, "Shelters")
+        lay3 = uf.getLegendLayerByName(self.iface, "Buildings to evacuate")
         if lay1 and lay2:
             to_delete = uf.getFeaturesByIntersection(lay2, lay1, True)
 
@@ -320,13 +321,15 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 rlayer.triggerRepaint()
 
                 #jump to tab 2
+                self.tabs.setTabEnabled(1, True)
                 self.tabs.setCurrentIndex(1)
 
-        names = ["POI_Evacu8_in", "POI_Evacu8_out"]
-        styles = ["style.qml", "style2.qml"]
-        self.dup_layer(28992, names)
-        self.load_style(names, styles)
-        self.intersectANDdelete()
+                if buffer_layer:
+                    names = ["Buildings to evacuate", "Shelters"]
+                    styles = ["style.qml", "style2.qml"]
+                    self.dup_layer(28992, names)
+                    self.load_style(names, styles)
+                    self.intersectANDdelete()
 
     # Making notes and sending to log
     def getNotes(self):
@@ -426,7 +429,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.to_evac_table()
 
     def select(self, point):
-        layers = ["POI_Evacu8_in", "POI_Evacu8_out"]
+        layers = ["Buildings to evacuate", "Shelters"]
 
         min_dist = QgsDistanceArea()
         min_layer = QgsVectorLayer()
@@ -457,7 +460,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         lineLayer = uf.getLegendLayerByName(iface, "road_net")
         lineLayer.removeSelection()
 
-        layers = ["POI_Evacu8_in", "POI_Evacu8_out"]
+        layers = ["Buildings to evacuate", "Shelters"]
         for layer in layers:
             uf.getLegendLayerByName(self.iface, layer).removeSelection()
         self.refreshCanvas(lineLayer)
@@ -570,12 +573,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             lineLayer = uf.getLegendLayerByName(iface, "road_net")
             lineLayer.deselect(self.shelId)
             self.refreshCanvas(lineLayer)
-            cap = int(self.shelter_info.item(3, 0).text())
-            pop = int(self.to_evac_info.item(3, 0).text())
-            if cap - pop < 0:
-                self.big_button.setEnabled(False)
-            else:
-                self.big_button.setEnabled(True)
+            self.big_button.setEnabled(True)
 
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
@@ -625,15 +623,13 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.warning_msg.setVisible(True)
         else:
             self.warning_msg.setVisible(False)
-        self.big_button.setEnabled(False)
 
 
-# Open the wiki
+    # Open the wiki
     def open_wiki(self):
         webbrowser.open('https://github.com/fhb1990/GEO1005_2017-18_group3/wiki')
 
-# Combine toEvacuate building and shelter
-
+    # Combine toEvacuate building and shelter
     def evacuateThis(self):
         # Write to log
         time = strftime("%d-%m-%Y %H:%M:%S", localtime())
@@ -650,9 +646,27 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         adr = self.shelter_info.item(2, 0).text()
         log_str = "Evacuate to:\nType:\t%s\nName:\t%s\nAddress:\t%s\n" %(evac_type, to_evac, adr)
         self.log.append(log_str)
+
         # Mark things as DONE
+        if not(uf.getLegendLayerByName(self.iface, "Done")):
+            done = QgsVectorLayer('Point?crs=epsg:28992', 'Done', 'memory')
+            QgsMapLayerRegistry.instance().addMapLayers([done])
+            style = "style for green marks.qml"
+            qml_path = self.plugin_dir + "/data/" + style
+            done.loadNamedStyle(qml_path)
+            done.triggerRepaint()
+        prov = uf.getLegendLayerByName(self.iface, "Done").dataProvider()
+        prov.addFeatures([self.evac_feat])
+        self.refreshCanvas(uf.getLegendLayerByName(self.iface, "Done"))
 
         # Lower capacity of shelter
+        layer = uf.getLegendLayerByName(self.iface, "Shelters" )
+        layer.startEditing()
+        cap = int(self.shelter_info.item(3, 0).text())
+        if cap < 0:
+            cap = 0
+        layer.changeAttributeValue(self.shel_feat.id(), 8, cap - pop)
+        layer.commitChanges()
 
         # Clear selections to start picking new targets
         self.deleteEvac()
