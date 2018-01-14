@@ -25,49 +25,31 @@
     <edittype widgetv2type="TextEdit" name="Address">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="pop_rand">
+      <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="distance">
       <widgetv2config IsMultiline="0" fieldEditable="1" constraint="" UseHtml="0" labelOnTop="0" constraintDescription="" notNull="0"/>
     </edittype>
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
     <rules key="{e3d598d3-48fe-4127-ae6c-60205840f2e6}">
-      <rule filter="&quot;fclass&quot; = 'college'" key="{bfa9c37a-ed1e-49e3-835e-c3193dcaa99e}" symbol="0" label="college"/>
-      <rule filter="&quot;fclass&quot; = 'fire_station'" key="{2ab81dff-b0e5-4803-83a7-e439d38a8f69}" symbol="1" label="fire_station"/>
-      <rule filter="&quot;fclass&quot; = 'hospital'" key="{810bce1e-30ef-4a24-b6c6-81df1e044b2f}" symbol="2" label="hospital"/>
-      <rule filter="&quot;fclass&quot; = 'kindergarten'" key="{c1109a1a-3915-45a2-ac8e-7e8bed11692b}" symbol="3" label="kindergarten"/>
-      <rule filter="&quot;fclass&quot; = 'nursing_home'" key="{96199a5a-916d-4a60-b6be-5a85a0595c8f}" symbol="4" label="nursing_home"/>
-      <rule filter="&quot;fclass&quot; = 'police'" key="{c18f3fcd-29d6-417f-9190-954a4c24b4b0}" symbol="5" label="police"/>
-      <rule filter="&quot;fclass&quot; = 'school'" key="{52190d5d-d1e3-44af-a8a3-e818423fc1c7}" symbol="6" label="school"/>
-      <rule filter="&quot;fclass&quot; = 'university'" key="{f3c395bb-a8e7-4806-9f0b-8a3864a04273}" symbol="7" label="university"/>
-      <rule filter="ELSE" key="{09cbbfef-fb91-495e-98ad-34ebee360570}" symbol="8"/>
+      <rule filter="&quot;fclass&quot; = 'police'" key="{c0fda92a-12ca-494b-a532-35f5aba209f2}" symbol="0" label="police"/>
+      <rule filter="&quot;fclass&quot; = 'fire_station'" key="{bb87020a-dfb6-4f42-9267-c937bb97f032}" symbol="1" label="fire_station"/>
+      <rule filter="&quot;fclass&quot; = 'kindergarten'" key="{02afe56c-2894-4fde-bba1-e224177608aa}" symbol="2" label="kindergarten"/>
+      <rule filter="&quot;fclass&quot; = 'school'" key="{56796492-f5ed-49c5-b84a-7e0e16fefd09}" symbol="3" label="school"/>
+      <rule filter="&quot;fclass&quot; = 'college'" key="{bfa9c37a-ed1e-49e3-835e-c3193dcaa99e}" symbol="4" label="college"/>
+      <rule filter="&quot;fclass&quot; = 'university'" key="{b6c2c4dd-35f5-499d-8d92-ebaac8c36936}" symbol="5" label="university"/>
+      <rule filter="&quot;fclass&quot; = 'hospital'" key="{810bce1e-30ef-4a24-b6c6-81df1e044b2f}" symbol="6" label="hospital"/>
+      <rule filter="&quot;fclass&quot; = 'nursing_home'" key="{96199a5a-916d-4a60-b6be-5a85a0595c8f}" symbol="7" label="nursing_home"/>
     </rules>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
         <layer pass="0" class="SvgMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="228,214,179,255"/>
+          <prop k="color" v="7,27,175,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="amenity/amenity_library.svg"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="82,82,82,255"/>
-          <prop k="outline_width" v="0.4"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="5"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="1">
-        <layer pass="0" class="SvgMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="221,184,166,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="backgrounds/background_safety.svg"/>
+          <prop k="name" v="backgrounds/background_security.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
@@ -76,7 +58,27 @@
           <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="3"/>
+          <prop k="size" v="6"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="1">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="222,99,17,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="amenity/amenity_firestation3.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="81,81,81,255"/>
+          <prop k="outline_width" v="0.2"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="7"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="size_unit" v="MM"/>
           <prop k="vertical_anchor_point" v="1"/>
@@ -85,9 +87,9 @@
       <symbol alpha="1" clip_to_extent="1" type="marker" name="2">
         <layer pass="0" class="SvgMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="202,183,193,255"/>
+          <prop k="color" v="110,170,230,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="health/health_pharmacy.svg"/>
+          <prop k="name" v="symbol/education_nursery.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
@@ -102,70 +104,10 @@
           <prop k="vertical_anchor_point" v="1"/>
         </layer>
       </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="3">
+      <symbol alpha="0.960784" clip_to_extent="1" type="marker" name="3">
         <layer pass="0" class="SvgMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="239,231,229,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="symbol/education_nursery.svg"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="81,81,81,255"/>
-          <prop k="outline_width" v="0.4"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="6"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="4">
-        <layer pass="0" class="SvgMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="194,159,203,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="accommodation/accommodation_house.svg"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="82,82,82,255"/>
-          <prop k="outline_width" v="0.4"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="6"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="5">
-        <layer pass="0" class="SvgMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="148,156,175,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="backgrounds/background_security.svg"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="81,81,81,255"/>
-          <prop k="outline_width" v="0.4"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="4"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="6">
-        <layer pass="0" class="SvgMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="182,200,166,255"/>
+          <prop k="color" v="110,170,230,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
           <prop k="name" v="shopping/shopping_clothes.svg"/>
           <prop k="offset" v="0,0"/>
@@ -176,16 +118,36 @@
           <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="6"/>
+          <prop k="size" v="8"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="size_unit" v="MM"/>
           <prop k="vertical_anchor_point" v="1"/>
         </layer>
       </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="7">
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="4">
         <layer pass="0" class="SvgMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="172,206,223,255"/>
+          <prop k="color" v="110,170,230,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="amenity/amenity_library.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="82,82,82,255"/>
+          <prop k="outline_width" v="0.4"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="7"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="5">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="110,170,230,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
           <prop k="name" v="symbol/education_university.svg"/>
           <prop k="offset" v="0,0"/>
@@ -196,29 +158,47 @@
           <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="6"/>
+          <prop k="size" v="8"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="size_unit" v="MM"/>
           <prop k="vertical_anchor_point" v="1"/>
         </layer>
       </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="8">
-        <layer pass="0" class="SimpleMarker" locked="0">
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="6">
+        <layer pass="0" class="SvgMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="51,218,190,255"/>
+          <prop k="color" v="110,170,230,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="joinstyle" v="bevel"/>
-          <prop k="name" v="circle"/>
+          <prop k="name" v="health/health_pharmacy.svg"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0"/>
+          <prop k="outline_color" v="81,81,81,255"/>
+          <prop k="outline_width" v="0.4"/>
           <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="2"/>
+          <prop k="size" v="10"/>
+          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="marker" name="7">
+        <layer pass="0" class="SvgMarker" locked="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="110,170,230,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="name" v="accommodation/accommodation_house.svg"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="82,82,82,255"/>
+          <prop k="outline_width" v="0.4"/>
+          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="8"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="size_unit" v="MM"/>
           <prop k="vertical_anchor_point" v="1"/>
@@ -238,7 +218,7 @@
     <property key="labeling/bufferColorB" value="255"/>
     <property key="labeling/bufferColorG" value="255"/>
     <property key="labeling/bufferColorR" value="255"/>
-    <property key="labeling/bufferDraw" value="false"/>
+    <property key="labeling/bufferDraw" value="true"/>
     <property key="labeling/bufferJoinStyle" value="128"/>
     <property key="labeling/bufferNoFill" value="false"/>
     <property key="labeling/bufferSize" value="1"/>
@@ -249,12 +229,12 @@
     <property key="labeling/centroidWhole" value="false"/>
     <property key="labeling/decimals" value="3"/>
     <property key="labeling/displayAll" value="false"/>
-    <property key="labeling/dist" value="0"/>
+    <property key="labeling/dist" value="3"/>
     <property key="labeling/distInMapUnits" value="false"/>
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
-    <property key="labeling/drawLabels" value="false"/>
-    <property key="labeling/enabled" value="false"/>
-    <property key="labeling/fieldName" value=""/>
+    <property key="labeling/drawLabels" value="true"/>
+    <property key="labeling/enabled" value="true"/>
+    <property key="labeling/fieldName" value="pop_rand"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value="MS Shell Dlg 2"/>
@@ -271,7 +251,7 @@
     <property key="labeling/fontWeight" value="50"/>
     <property key="labeling/fontWordSpacing" value="0"/>
     <property key="labeling/formatNumbers" value="false"/>
-    <property key="labeling/isExpression" value="true"/>
+    <property key="labeling/isExpression" value="false"/>
     <property key="labeling/labelOffsetInMapUnits" value="true"/>
     <property key="labeling/labelOffsetMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/labelPerPart" value="false"/>
@@ -290,7 +270,7 @@
     <property key="labeling/obstacleType" value="0"/>
     <property key="labeling/offsetType" value="0"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
-    <property key="labeling/placement" value="6"/>
+    <property key="labeling/placement" value="0"/>
     <property key="labeling/placementFlags" value="10"/>
     <property key="labeling/plussign" value="false"/>
     <property key="labeling/predefinedPositionOrder" value="TR,TL,BR,BL,R,L,TSR,BSR"/>
@@ -434,7 +414,8 @@
     <alias field="Latitud" index="5" name=""/>
     <alias field="Longitud" index="6" name=""/>
     <alias field="Address" index="7" name=""/>
-    <alias field="distance" index="8" name=""/>
+    <alias field="pop_rand" index="8" name=""/>
+    <alias field="distance" index="9" name=""/>
   </aliases>
   <excludeAttributesWMS/>
   <excludeAttributesWFS/>
@@ -451,6 +432,7 @@
       <column width="-1" hidden="0" type="field" name="Address"/>
       <column width="-1" hidden="0" type="field" name="distance"/>
       <column width="-1" hidden="1" type="actions"/>
+      <column width="-1" hidden="0" type="field" name="pop_rand"/>
     </columns>
   </attributetableconfig>
   <editform>.</editform>
@@ -490,6 +472,7 @@ def my_form_open(dialog, layer, feature):
     <default field="Latitud" expression=""/>
     <default field="Longitud" expression=""/>
     <default field="Address" expression=""/>
+    <default field="pop_rand" expression=""/>
     <default field="distance" expression=""/>
   </defaults>
   <previewExpression></previewExpression>

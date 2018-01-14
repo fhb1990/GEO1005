@@ -85,7 +85,7 @@
          <bool>false</bool>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -115,12 +115,12 @@
            <rect>
             <x>60</x>
             <y>10</y>
-            <width>91</width>
+            <width>141</width>
             <height>41</height>
            </rect>
           </property>
           <property name="text">
-           <string>(Re)load Map</string>
+           <string>Load / Reload Map</string>
           </property>
          </widget>
          <widget class="QGroupBox" name="evac_box">
@@ -133,7 +133,7 @@
            </rect>
           </property>
           <property name="title">
-           <string>Evacuation Zone (in m):</string>
+           <string>Perimeter (in m):</string>
           </property>
           <widget class="QPushButton" name="set_rad">
            <property name="geometry">
@@ -212,9 +212,9 @@
           <widget class="QTableWidget" name="scen_details">
            <property name="geometry">
             <rect>
-             <x>170</x>
+             <x>150</x>
              <y>30</y>
-             <width>121</width>
+             <width>141</width>
              <height>131</height>
             </rect>
            </property>
@@ -249,7 +249,7 @@
           <widget class="QLabel" name="label_3">
            <property name="geometry">
             <rect>
-             <x>170</x>
+             <x>150</x>
              <y>10</y>
              <width>91</width>
              <height>16</height>
@@ -299,9 +299,9 @@
          <widget class="QPushButton" name="send_notes">
           <property name="geometry">
            <rect>
-            <x>230</x>
+            <x>214</x>
             <y>440</y>
-            <width>75</width>
+            <width>91</width>
             <height>23</height>
            </rect>
           </property>

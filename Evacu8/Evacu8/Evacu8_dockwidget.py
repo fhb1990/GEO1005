@@ -244,7 +244,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # SELECT AND DELETE
     def intersectANDdelete(self):
-        lay1 = uf.getLegendLayerByName(self.iface, "Buffers")
+        lay1 = uf.getLegendLayerByName(self.iface, "Perimeter")
         lay2 = uf.getLegendLayerByName(self.iface, "Shelters")
         lay3 = uf.getLegendLayerByName(self.iface, "Buildings to evacuate")
         if lay1 and lay2:
@@ -277,22 +277,22 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         if origins > 0:
             cutoff_distance = self.getBufferCutoff()
             if cutoff_distance:
-                if (QgsMapLayerRegistry.instance().mapLayersByName("Buffers")):
-                    buffer_layer =  uf.getLegendLayerByName(self.iface, "Buffers")
+                if (QgsMapLayerRegistry.instance().mapLayersByName("Perimeter")):
+                    buffer_layer =  uf.getLegendLayerByName(self.iface, "Perimeter")
                     QgsMapLayerRegistry.instance().removeMapLayer(buffer_layer.id())
                 buffers = {}
                 for point in origins:
                     geom = point.geometry()
                     buffers[point.id()] = geom.buffer(cutoff_distance,12).asPolygon()
-                # store the buffer results in temporary layer called "Buffers"
-                buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
+                # store the buffer results in temporary layer called "Perimeter"
+                buffer_layer = uf.getLegendLayerByName(self.iface, "Perimeter")
                 # create one if it doesn't exist
                 if not buffer_layer:
                     attribs = ['id', 'distance']
                     types = [QtCore.QVariant.String, QtCore.QVariant.Double]
-                    buffer_layer = uf.createTempLayer('Buffers','POLYGON',layer.crs().postgisSrid(), attribs, types, 70)
+                    buffer_layer = uf.createTempLayer('Perimeter','POLYGON',layer.crs().postgisSrid(), attribs, types, 70)
                     uf.loadTempLayer(buffer_layer)
-                    buffer_layer.setLayerName('Buffers')
+                    buffer_layer.setLayerName('Perimeter')
                     symbols = buffer_layer.rendererV2().symbols()
                     symbol = symbols[0]
                     symbol.setColor(QColor.fromRgb(220, 220, 0))
