@@ -139,6 +139,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.big_button.setEnabled(False)
         self.warning_msg.setVisible(False)
 
+        self.show_selected.clicked.connect(self.showSelected)
+        self.hide_selected.clicked.connect(self.hideSelected)
+        self.save_map.clicked.connect(self.saveMap)
+
     def closeEvent(self, event):
         # disconnect interface signa
         self.closingPlugin.emit()
@@ -665,6 +669,23 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         prov.addFeatures([self.evac_feat])
         self.refreshCanvas(uf.getLegendLayerByName(self.iface, "Done"))
 
+        # Store Selected Routes
+        if not (uf.getLegendLayerByName(self.iface, "Selected Routes")):
+            selected = QgsVectorLayer('LINESTRING?crs=epsg:28992', 'Selected Routes', 'memory')
+            QgsMapLayerRegistry.instance().addMapLayers([selected])
+            symbols = selected.rendererV2().symbols()
+            symbol = symbols[0]
+            symbol.setWidth(1.5)
+            symbol.setColor(QColor.fromRgb(0, 0, 250))
+            iface.legendInterface().setLayerVisible(selected, False)
+        prov = uf.getLegendLayerByName(self.iface, "Selected Routes").dataProvider()
+        if uf.getLegendLayerByName(self.iface, "Routes"):
+            route_layer = uf.getLegendLayerByName(self.iface, "Routes")
+            feats = route_layer.getFeatures()
+        for feat in feats:
+            prov.addFeatures([feat])
+        self.refreshCanvas(uf.getLegendLayerByName(self.iface, "Selected Routes"))
+
         # Lower capacity of shelter
         layer = uf.getLegendLayerByName(self.iface, "Shelters" )
         layer.startEditing()
@@ -682,6 +703,21 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         path = 'C:/Users/'+os.getenv('USERNAME')+'/Desktop/Evacu8_log.txt'
         with open(path,"w") as fh:
             fh.write("%s" %(log_text))
+
+    def showSelected(self):
+        selected = uf.getLegendLayerByName(self.iface, "Selected Routes")
+        if selected:
+            iface.legendInterface().setLayerVisible(selected, True)
+
+    def hideSelected(self):
+        selected = uf.getLegendLayerByName(self.iface, "Selected Routes")
+        if selected:
+            iface.legendInterface().setLayerVisible(selected, False)
+
+    def saveMap(self):
+        filename = 'C:/Users/'+os.getenv('USERNAME')+'/Desktop/Evacu8_log.pgn'
+        if filename != '':
+            self.canvas.saveAsImage(filename, None, "PNG")
 
 class PolyMapTool(QgsMapToolEmitPoint):
 
