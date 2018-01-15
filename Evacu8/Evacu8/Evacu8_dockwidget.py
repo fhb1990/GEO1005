@@ -727,7 +727,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         for building in buildings:
             if feat.attributes()[2] != 'police' and feat.attributes()[2] != 'fire_station':
                 n += 1
-                
+
         ev = uf.getLegendLayerByName(iface, "Selected Routes")
         evacs = ev.getFeatures()
         m = 0

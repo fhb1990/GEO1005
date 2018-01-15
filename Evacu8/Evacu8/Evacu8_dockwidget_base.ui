@@ -482,12 +482,38 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>10</x>
              <y>60</y>
-             <width>151</width>
+             <width>41</width>
              <height>21</height>
             </rect>
            </property>
            <property name="text">
-            <string> Draw      Set      Delete</string>
+            <string> Draw</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_2">
+           <property name="geometry">
+            <rect>
+             <x>70</x>
+             <y>60</y>
+             <width>41</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Set</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_3">
+           <property name="geometry">
+            <rect>
+             <x>120</x>
+             <y>60</y>
+             <width>41</width>
+             <height>21</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Delete</string>
            </property>
           </widget>
          </widget>
