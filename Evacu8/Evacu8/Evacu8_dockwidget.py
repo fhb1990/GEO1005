@@ -337,6 +337,13 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                     self.load_style(names, styles)
                     self.intersectANDdelete()
 
+                    build = uf.getLegendLayerByName(iface, "Buildings to evacuate")
+                    feats = build.getFeatures()
+                    n = 0
+                    for feat in feats:
+                        n += 1
+                    self.buildings.append('%s'%n)
+
     # Making notes and sending to livechat
     def getNotes(self):
         notes = self.scen_info.toHtml()
@@ -563,10 +570,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 routes_layer = uf.createTempLayer('Routes', 'LINESTRING', self.network_layer.crs().postgisSrid(),
                                                   attribs, types)
 
-                symbols = routes_layer.rendererV2().symbols()
-                symbol = symbols[0]
-                symbol.setWidth(1.5)
-                symbol.setColor(QColor.fromRgb(250,50,50))
+                style = "style_red_routes.qml"
+                qml_path = self.plugin_dir + "/data/" + style
+                routes_layer.loadNamedStyle(qml_path)
+                routes_layer.triggerRepaint()
 
                 uf.loadTempLayer(routes_layer)
             # calculate route length
@@ -674,10 +681,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         if not (uf.getLegendLayerByName(self.iface, "Selected Routes")):
             selected = QgsVectorLayer('LINESTRING?crs=epsg:28992', 'Selected Routes', 'memory')
             QgsMapLayerRegistry.instance().addMapLayers([selected])
-            symbols = selected.rendererV2().symbols()
-            symbol = symbols[0]
-            symbol.setWidth(1.5)
-            symbol.setColor(QColor.fromRgb(0, 0, 250))
+            style = "style_blue_routes.qml"
+            qml_path = self.plugin_dir + "/data/" + style
+            selected.loadNamedStyle(qml_path)
+            selected.triggerRepaint()
             iface.legendInterface().setLayerVisible(selected, False)
         prov = uf.getLegendLayerByName(self.iface, "Selected Routes").dataProvider()
         if uf.getLegendLayerByName(self.iface, "Routes"):
@@ -695,6 +702,25 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             cap = 0
         layer.changeAttributeValue(self.shel_feat.id(), 8, cap - pop)
         layer.commitChanges()
+
+        # Change Number of Buildings to Evacuate
+        build = uf.getLegendLayerByName(iface, "Buildings to evacuate")
+        buildings = build.getFeatures()
+        n =  0
+        for building in buildings:
+            n += 1
+
+        ev = uf.getLegendLayerByName(iface, "Selected Routes")
+        evacs = ev.getFeatures()
+        m = 0
+        for evac in evacs:
+            m += 1
+
+        self.buildings.clear()
+        if n-m > 0:
+            self.buildings.append('%s'%(n-m))
+        else:
+            self.buildings.append('0')
 
         # Clear selections to start picking new targets
         self.deleteEvac()
