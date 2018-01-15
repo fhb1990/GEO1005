@@ -27,10 +27,10 @@ import webbrowser
 from time import localtime, strftime
 
 from PyQt4 import QtGui, QtCore, uic
-from PyQt4.QtCore import pyqtSignal, Qt, QVariant, QSize, QUrl
-from PyQt4.QtGui import QColor, QDesktopServices
-from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QgsSpatialIndex, QGis, \
-    QgsDistanceArea, QgsTolerance, QgsRectangle
+from PyQt4.QtCore import pyqtSignal, Qt, QVariant, QSize, QTimer
+from PyQt4.QtGui import QColor
+from qgis._core import QgsVectorLayer, QgsMapLayerRegistry, QgsFeature, QgsGeometry, QgsPoint, QGis, \
+    QgsDistanceArea
 from qgis._gui import QgsMapToolEmitPoint, QgsRubberBand
 from qgis.utils import iface
 
@@ -67,6 +67,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitEvac = QgsMapToolEmitPoint(self.canvas)
         self.emitShel = QgsMapToolEmitPoint(self.canvas)
         self.emitDel = QgsMapToolEmitPoint(self.canvas)
+        self.input_template = self.scen_info.toHtml()
 
         # set up GUI operation signals
         # data
@@ -94,7 +95,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.del_danger.setIcon(QtGui.QIcon(':images\Delete.png'))
         self.del_danger.setIconSize(QSize(30, 30))
         self.shortestRouteButton.setIcon(QtGui.QIcon(':images\Route.png'))
-        self.shortestRouteButton.setIconSize(QSize(30, 30))
+        self.shortestRouteButton.setIconSize(QSize(25, 25))
         self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
         self.to_wiki1.setIconSize(QSize(20, 20))
         # self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
@@ -143,6 +144,12 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.hide_selected.clicked.connect(self.hideSelected)
         self.save_map.clicked.connect(self.saveMap)
 
+        self.savelog.clicked.connect(self.timerMessage)
+        self.save_map.clicked.connect(self.timerMessage)
+        self.saved_msg.setVisible(False)
+
+        self.sent_msg.setVisible(False)
+
     def closeEvent(self, event):
         # disconnect interface signa
         self.closingPlugin.emit()
@@ -154,6 +161,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     def openScenario(self,filename=""):
         self.iface.addProject(unicode(self.plugin_dir+"/data/Evacu8_dataset_new.qgs"))
         self.set_rad.setEnabled(False)
+        self.tabs.setTabEnabled(1, False)
+        self.scen_info.clear()
+        self.scen_info.insertHtml(self.input_template)
         # scenario_open = False
         # scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
         # # check if file exists
@@ -329,6 +339,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 #jump to tab 2
                 self.tabs.setTabEnabled(1, True)
                 self.tabs.setCurrentIndex(1)
+                self.scrollArea.verticalScrollBar().setValue(0)
 
                 if buffer_layer:
                     names = ["Buildings to evacuate", "Shelters"]
@@ -593,6 +604,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.refreshCanvas(lineLayer)
             self.big_button.setEnabled(True)
 
+            # Set ROUTE text color Red
+            self.shelter_info.item(4, 0).setTextColor(QColor(255, 0, 0))
+
     # after adding features to layers needs a refresh (sometimes)
     def refreshCanvas(self, layer):
         if self.canvas.isCachingEnabled():
@@ -698,9 +712,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         layer = uf.getLegendLayerByName(self.iface, "Shelters" )
         layer.startEditing()
         cap = int(self.shelter_info.item(3, 0).text())
-        if cap < 0:
-            cap = 0
-        layer.changeAttributeValue(self.shel_feat.id(), 8, cap - pop)
+        m = cap - pop
+        if m > 0:
+            layer.changeAttributeValue(self.shel_feat.id(), 8, cap - pop)
+        else:
+            layer.changeAttributeValue(self.shel_feat.id(), 8, 0)
         layer.commitChanges()
 
         # Change Number of Buildings to Evacuate
@@ -722,6 +738,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             self.buildings.append('0')
 
+        # Display confirmation message
+        self.sent_msg.setVisible(True)
+        QTimer.singleShot(3000, lambda: (self.sent_msg.setVisible(False)))
+
         # Clear selections to start picking new targets
         self.deleteEvac()
 
@@ -742,9 +762,13 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             iface.legendInterface().setLayerVisible(selected, False)
 
     def saveMap(self):
-        filename = 'C:/Users/'+os.getenv('USERNAME')+'/Desktop/Evacu8_log.pgn'
+        filename = 'C:/Users/' + os.getenv('USERNAME') + '/Desktop/Evacu8_log.png'
         if filename != '':
             self.canvas.saveAsImage(filename, None, "PNG")
+
+    def timerMessage(self):
+        self.saved_msg.setVisible(True)
+        QTimer.singleShot(2000, lambda: (self.saved_msg.setVisible(False)))
 
 class PolyMapTool(QgsMapToolEmitPoint):
 
