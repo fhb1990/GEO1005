@@ -94,7 +94,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.del_danger.setIcon(QtGui.QIcon(':images\Delete.png'))
         self.del_danger.setIconSize(QSize(30, 30))
         self.shortestRouteButton.setIcon(QtGui.QIcon(':images\Route.png'))
-        self.shortestRouteButton.setIconSize(QSize(50, 50))
+        self.shortestRouteButton.setIconSize(QSize(30, 30))
         self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
         self.to_wiki1.setIconSize(QSize(30, 30))
         self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
@@ -122,12 +122,12 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shortestRouteButton.clicked.connect(self.calculateRoute)
         self.network_layer = QgsVectorLayer()
         self.tied_points = []
-        self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Pop.","Dist."])
-        self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Adr.", "Cap.","Route"])
-        self.scen_details.setVerticalHeaderLabels(["Time", "Type", "Adr.", "Level"])
-        self.scen_list.addItems(["Bomb Threat","Shooting"])
-        self.scen_list.itemClicked.connect(self.show_scen_details1)
-        self.scen_list.itemClicked.connect(self.show_scen_details2)
+        self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Population","Dist from Attack(m)"])
+        self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Capacity","Route distance (m)"])
+        # self.scen_details.setVerticalHeaderLabels(["Time", "Type", "Adr.", "Level"])
+        # self.scen_list.addItems(["Bomb Threat","Shooting"])
+        # self.scen_list.itemClicked.connect(self.show_scen_details1)
+        # self.scen_list.itemClicked.connect(self.show_scen_details2)
 
         # Open wiki
         self.to_wiki1.clicked.connect(self.open_wiki)
@@ -335,7 +335,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     def getNotes(self):
         notes = self.notes_box.toPlainText()
         if len(notes) > 0:
-            self.notes_box.clear()
+            # self.notes_box.clear()
             return notes
 
     def sendNotes(self):
@@ -584,19 +584,19 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # Displaying information
 
-    def show_scen_details1(self,item):
-        if str(item.text()) == "Bomb Threat":
-            values = ["11:34","Bomb Threat","Rotterdam Centraal","3"]
-            for i, item in enumerate(values):
-                # i is the table row, items must be added as QTableWidgetItems
-                self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
-
-    def show_scen_details2(self,item):
-        if str(item.text()) == "Shooting":
-            values = ["11:55","Shooting","Lijnbaan 5, Rotterdam","5"]
-            for i, item in enumerate(values):
-                # i is the table row, items must be added as QTableWidgetItems
-                self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+    # def show_scen_details1(self,item):
+    #     if str(item.text()) == "Bomb Threat":
+    #         values = ["11:34","Bomb Threat","Rotterdam Centraal","3"]
+    #         for i, item in enumerate(values):
+    #             # i is the table row, items must be added as QTableWidgetItems
+    #             self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
+    #
+    # def show_scen_details2(self,item):
+    #     # if str(item.text()) == "Shooting":
+    #         values = ["11:55","Shooting","Lijnbaan 5, Rotterdam","5"]
+    #         for i, item in enumerate(values):
+    #             # i is the table row, items must be added as QTableWidgetItems
+    #             self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
 
 
     def to_evac_table(self):
