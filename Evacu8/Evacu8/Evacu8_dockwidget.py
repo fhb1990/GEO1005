@@ -164,6 +164,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.tabs.setTabEnabled(1, False)
         self.scen_info.clear()
         self.scen_info.insertHtml(self.input_template)
+        self.buildings.clear()
         # scenario_open = False
         # scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
         # # check if file exists
@@ -341,6 +342,13 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 self.tabs.setCurrentIndex(1)
                 self.scrollArea.verticalScrollBar().setValue(0)
 
+                # If POIs in and out already exist, remove them
+                check_layer = uf.getLegendLayerByName(self.iface, "Buildings to evacuate")
+                check_layer2 = uf.getLegendLayerByName(self.iface, "Shelters")
+                if check_layer:
+                    QgsMapLayerRegistry.instance().removeMapLayer(check_layer.id())
+                    QgsMapLayerRegistry.instance().removeMapLayer(check_layer2.id())
+                    self.buildings.clear()
                 if buffer_layer:
                     names = ["Buildings to evacuate", "Shelters"]
                     styles = ["style.qml", "style2.qml"]
@@ -359,13 +367,14 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     # Making notes and sending to livechat
     def getNotes(self):
         notes = self.scen_info.toHtml()
-        if len(notes) > 0:
-            # self.notes_box.clear()
-            return notes
+        return notes
 
     def sendNotes(self):
+        input_data = self.getNotes()
+        if len(input_data) == 1042:
+             return
         time = strftime("%d-%m-%Y %H:%M:%S", localtime())
-        new_notes = time + ": " + self.getNotes() + "\n"
+        new_notes = time + ": " + input_data + "\n"
         old_notes = self.live_chat.toHtml()
         self.live_chat.clear()
         self.live_chat.insertHtml(new_notes)
@@ -725,7 +734,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         buildings = build.getFeatures()
         n =  0
         for building in buildings:
-            if feat.attributes()[2] != 'police' and feat.attributes()[2] != 'fire_station':
+            if building.attributes()[2] != 'police' and building.attributes()[2] != 'fire_station':
                 n += 1
 
         ev = uf.getLegendLayerByName(iface, "Selected Routes")
