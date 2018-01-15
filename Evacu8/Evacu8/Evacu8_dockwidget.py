@@ -96,9 +96,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shortestRouteButton.setIcon(QtGui.QIcon(':images\Route.png'))
         self.shortestRouteButton.setIconSize(QSize(30, 30))
         self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
-        self.to_wiki1.setIconSize(QSize(30, 30))
+        self.to_wiki1.setIconSize(QSize(20, 20))
         self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
-        self.to_wiki2.setIconSize(QSize(30, 30))
+        self.to_wiki2.setIconSize(QSize(20, 20))
 
         # analysis
         self.evac = QgsPoint()
@@ -134,6 +134,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.to_wiki2.clicked.connect(self.open_wiki)
 
         self.big_button.clicked.connect(self.evacuateThis)
+        self.savelog.clicked.connect(self.saveLog)
+
         self.big_button.setEnabled(False)
         self.warning_msg.setVisible(False)
 
@@ -331,17 +333,21 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                     self.load_style(names, styles)
                     self.intersectANDdelete()
 
-    # Making notes and sending to log
+    # Making notes and sending to livechat
     def getNotes(self):
-        notes = self.notes_box.toPlainText()
+        notes = self.scen_info.toPlainText()
         if len(notes) > 0:
             # self.notes_box.clear()
             return notes
 
     def sendNotes(self):
         time = strftime("%d-%m-%Y %H:%M:%S", localtime())
-        notes = time + ": " + self.getNotes() + "\n"
-        self.log.append(notes)
+        new_notes = time + ": " + self.getNotes() + "\n"
+        old_notes = self.live_chat.toPlainText()
+        self.live_chat.clear()
+        self.live_chat.append(new_notes)
+        self.live_chat.append(old_notes)
+        self.live_chat.moveCursor(QtGui.QTextCursor.Start)
 
     # Set danger polygon
     def setDangerZone(self):
@@ -671,6 +677,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Clear selections to start picking new targets
         self.deleteEvac()
 
+    def saveLog(self):
+        log_text = self.log.toPlainText()
+        path = 'C:/Users/'+os.getenv('USERNAME')+'/Desktop/Evacu8_log.txt'
+        with open(path,"w") as fh:
+            fh.write("%s" %(log_text))
 
 class PolyMapTool(QgsMapToolEmitPoint):
 
