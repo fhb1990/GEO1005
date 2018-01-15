@@ -352,7 +352,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                     feats = build.getFeatures()
                     n = 0
                     for feat in feats:
-                        n += 1
+                        if feat.attributes()[2] != 'police' and feat.attributes()[2] != 'fire_station':
+                            n += 1
                     self.buildings.append('%s'%n)
 
     # Making notes and sending to livechat
@@ -724,8 +725,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         buildings = build.getFeatures()
         n =  0
         for building in buildings:
-            n += 1
-
+            if feat.attributes()[2] != 'police' and feat.attributes()[2] != 'fire_station':
+                n += 1
+                
         ev = uf.getLegendLayerByName(iface, "Selected Routes")
         evacs = ev.getFeatures()
         m = 0
