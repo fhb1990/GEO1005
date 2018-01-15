@@ -339,7 +339,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # Making notes and sending to livechat
     def getNotes(self):
-        notes = self.scen_info.toPlainText()
+        notes = self.scen_info.toHtml()
         if len(notes) > 0:
             # self.notes_box.clear()
             return notes
@@ -347,10 +347,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     def sendNotes(self):
         time = strftime("%d-%m-%Y %H:%M:%S", localtime())
         new_notes = time + ": " + self.getNotes() + "\n"
-        old_notes = self.live_chat.toPlainText()
+        old_notes = self.live_chat.toHtml()
         self.live_chat.clear()
-        self.live_chat.append(new_notes)
-        self.live_chat.append(old_notes)
+        self.live_chat.insertHtml(new_notes)
+        self.live_chat.append("\n")
+        self.live_chat.insertHtml(old_notes)
         self.live_chat.moveCursor(QtGui.QTextCursor.Start)
 
     # Set danger polygon
