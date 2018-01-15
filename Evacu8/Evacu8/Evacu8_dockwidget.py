@@ -97,8 +97,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shortestRouteButton.setIconSize(QSize(30, 30))
         self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
         self.to_wiki1.setIconSize(QSize(20, 20))
-        self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
-        self.to_wiki2.setIconSize(QSize(20, 20))
+        # self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
+        # self.to_wiki2.setIconSize(QSize(20, 20))
 
         # analysis
         self.evac = QgsPoint()
@@ -131,7 +131,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # Open wiki
         self.to_wiki1.clicked.connect(self.open_wiki)
-        self.to_wiki2.clicked.connect(self.open_wiki)
+        #self.to_wiki2.clicked.connect(self.open_wiki)
 
         self.big_button.clicked.connect(self.evacuateThis)
         self.savelog.clicked.connect(self.saveLog)
