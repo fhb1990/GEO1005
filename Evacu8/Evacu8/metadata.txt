@@ -9,12 +9,12 @@
 [general]
 name=Evacu8
 qgisMinimumVersion=2.0
-description=Evacuation Plugin
+description=Evacuation Plugin made for GEO1005 course, TU Delft
 version=0.1
-author=group3
+author= Francisco Gabriel Garcia Gonzalez, Vasileios Bouzas, Freek Boersma
 email=bouzasbasilis@hotmail.com
 
-about=Evacuation Plugin
+about= Evacu8 is made to assist a Central Police Dispatch with evacuating precarious buildings during an emergency. The current version only includes data for the case of Rotterdam.
 
 tracker=placeholder
 repository=placeholder
@@ -28,7 +28,7 @@ repository=placeholder
 # Tags are comma separated with spaces allowed
 tags=
 
-homepage=
+homepage= https://github.com/fhb1990/GEO1005_2017-18_group3/wiki
 category=Plugins
 icon=icon.png
 # experimental flag
