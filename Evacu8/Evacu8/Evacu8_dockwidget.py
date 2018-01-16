@@ -135,10 +135,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         self.show_selected.clicked.connect(self.showSelected)
         self.hide_selected.clicked.connect(self.hideSelected)
-        self.save_map.clicked.connect(self.saveMap)
+        self.save_map.pressed.connect(self.showSelected)
+        self.save_map.released.connect(self.saveMap)
 
         self.savelog.clicked.connect(self.timerMessage)
-        self.save_map.clicked.connect(self.timerMessage)
+        self.save_map.released.connect(self.timerMessage)
         self.saved_msg.setVisible(False)
 
         self.sent_msg.setVisible(False)
