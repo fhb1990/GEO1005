@@ -599,7 +599,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # Open the wiki
     def open_wiki(self):
-        webbrowser.open('https://github.com/fhb1990/GEO1005_2017-18_group3/wiki')
+        webbrowser.open('https://github.com/fhb1990/GEO1005_2017-18_group3/wiki/06.-Plugin-manual')
 
     # Combine toEvacuate building and shelter
     def evacuateThis(self):
