@@ -84,18 +84,18 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.emitDel.canvasClicked.connect(self.get_del)
 
         # set images and icons
-        self.logo.setPixmap(QtGui.QPixmap(':images\Logosmall.jpeg'))
-        self.load_scen.setIcon(QtGui.QIcon(':images\Open.png'))
+        self.logo.setPixmap(QtGui.QPixmap(':images/Logosmall.jpeg'))
+        self.load_scen.setIcon(QtGui.QIcon(':images/Open.png'))
         self.load_scen.setIconSize(QSize(25, 25))
-        self.set_danger.setIcon(QtGui.QIcon(':images\Draw1.svg'))
+        self.set_danger.setIcon(QtGui.QIcon(':images/Draw1.svg'))
         self.set_danger.setIconSize(QSize(25, 25))
-        self.get_danger.setIcon(QtGui.QIcon(':images\Check.png'))
+        self.get_danger.setIcon(QtGui.QIcon(':images/Check.png'))
         self.get_danger.setIconSize(QSize(25, 25))
-        self.del_danger.setIcon(QtGui.QIcon(':images\Delete.png'))
+        self.del_danger.setIcon(QtGui.QIcon(':images/Delete.png'))
         self.del_danger.setIconSize(QSize(30, 30))
-        self.shortestRouteButton.setIcon(QtGui.QIcon(':images\Route.png'))
+        self.shortestRouteButton.setIcon(QtGui.QIcon(':images/Route.png'))
         self.shortestRouteButton.setIconSize(QSize(25, 25))
-        self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
+        self.to_wiki1.setIcon(QtGui.QIcon(':images/Info.png'))
         self.to_wiki1.setIconSize(QSize(20, 20))
 
 
@@ -693,8 +693,10 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
     # Save the log to desktop
     def saveLog(self):
         log_text = self.log.toPlainText()
-        path = 'C:/Users/'+os.getenv('USERNAME')+'/Desktop/Evacu8_log.txt'
-        with open(path,"w") as fh:
+        # path = 'C:/Users/'+os.getenv('USERNAME')+'/Desktop/Evacu8_log.txt'
+        path1 = os.path.join(os.path.expanduser('~'), 'Desktop') + '/Evacu8_log.txt'
+        print path1
+        with open(path1,"w") as fh:
             fh.write("%s" %(log_text))
 
     # Show all the chosen routes on the map
@@ -711,10 +713,11 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # Save the shown canvas to desktop
     def saveMap(self):
-        filename = 'C:/Users/' + os.getenv('USERNAME') + '/Desktop/Evacu8_log.png'
+        #filename = 'C:/Users/' + os.getenv('USERNAME') + '/Desktop/Evacu8_log.png'
+        filename1 = os.path.join(os.path.expanduser('~'), 'Desktop') + '/Evacu8_log.png'
         self.showSelected()
-        if filename != '':
-            self.canvas.saveAsImage(filename, None, "PNG")
+        if filename1 != '':
+            self.canvas.saveAsImage(filename1, None, "PNG")
 
     # Show "saved to desktop" message for 2 seconds
     def timerMessage(self):

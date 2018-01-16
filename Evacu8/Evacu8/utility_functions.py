@@ -24,7 +24,7 @@ from PyQt4 import QtGui, QtCore
 from qgis.core import *
 from qgis.networkanalysis import *
 
-from pyspatialite import dbapi2 as sqlite
+
 import psycopg2 as pgsql
 import numpy as np
 import math
