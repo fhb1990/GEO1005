@@ -78,7 +78,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.set_rad.clicked.connect(self.calculateBuffer)
         self.set_rad.setEnabled(False)
         self.send_notes.clicked.connect(self.sendNotes)
-        # self.set_rad.clicked.connect(self.POI_selection)
         self.set_danger.clicked.connect(self.setDangerZone)
         self.get_danger.clicked.connect(self.getDangerZone)
         self.del_danger.clicked.connect(self.delDangerZone)
@@ -98,8 +97,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.shortestRouteButton.setIconSize(QSize(25, 25))
         self.to_wiki1.setIcon(QtGui.QIcon(':images\Info.png'))
         self.to_wiki1.setIconSize(QSize(20, 20))
-        # self.to_wiki2.setIcon(QtGui.QIcon(':images\Info.png'))
-        # self.to_wiki2.setIconSize(QSize(20, 20))
+
 
         # analysis
         self.evac = QgsPoint()
@@ -125,14 +123,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.tied_points = []
         self.to_evac_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Population","Dist from Attack(m)"])
         self.shelter_info.setVerticalHeaderLabels(["Type", "Name", "Address", "Capacity","Route distance (m)"])
-        # self.scen_details.setVerticalHeaderLabels(["Time", "Type", "Adr.", "Level"])
-        # self.scen_list.addItems(["Bomb Threat","Shooting"])
-        # self.scen_list.itemClicked.connect(self.show_scen_details1)
-        # self.scen_list.itemClicked.connect(self.show_scen_details2)
 
         # Open wiki
         self.to_wiki1.clicked.connect(self.open_wiki)
-        #self.to_wiki2.clicked.connect(self.open_wiki)
 
         self.big_button.clicked.connect(self.evacuateThis)
         self.savelog.clicked.connect(self.saveLog)
@@ -151,32 +144,22 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.sent_msg.setVisible(False)
 
     def closeEvent(self, event):
-        # disconnect interface signa
+        # disconnect interface signal
         self.closingPlugin.emit()
         event.accept()
 
 
     ##Functions##
     #Open Scenario
-    def openScenario(self,filename=""):
+    def openScenario(self, filename=""):
         self.iface.addProject(unicode(self.plugin_dir+"/data/Evacu8_dataset_new.qgs"))
         self.set_rad.setEnabled(False)
         self.tabs.setTabEnabled(1, False)
         self.scen_info.clear()
         self.scen_info.insertHtml(self.input_template)
         self.buildings.clear()
-        # scenario_open = False
-        # scenario_file = os.path.join(u'/Users/jorge/github/GEO1005', 'sample_data', 'time_test.qgs')
-        # # check if file exists
-        # if os.path.isfile(scenario_file):
-        #     self.iface.addProject(scenario_file)
-        #     scenario_open = True
-        # else:
-        #     last_dir = uf.getLastDir("data")
-        #     new_file = QtGui.QFileDialog.getOpenFileName(self, "", last_dir, "(*.qgs)")
-        #     if new_file:
-        #         self.iface.addProject(unicode(new_file))
-        #         scenario_open = True
+        self.log.clear()
+
 
 
     # Attack Point
@@ -415,42 +398,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             vl.deleteFeature(fid)
             vl.commitChanges()
 
-    #POI selection#
-    # def POI_selection(self, mapPoint):
-    #     init_layers = ["Schools points", "Hospitals points", "Nursery Homes points"]
-    #     layers_in = ['Schools in', 'Hospitals in', 'Nursery Homes in']
-    #     layers_out = ['Schools out', 'Hospitals out', 'Nursery Homes out']
-    #
-    #     buffer_layer = uf.getLegendLayerByName(self.iface, "Buffers")
-    #     if len(QgsMapLayerRegistry.instance().mapLayersByName('Schools in')) == 0:
-    #         for init_layer, layer_in, layer_out in zip(init_layers, layers_in, layers_out):
-    #             layer = uf.getLegendLayerByName(self.iface, init_layer)
-    #             if buffer_layer and layer:
-    #                 points = uf.getFeaturesIntersections(layer, buffer_layer)
-    #                 new_layer = QgsVectorLayer('Point?crs=epsg:28992', layer_in, 'memory')
-    #                 prov = new_layer.dataProvider()
-    #                 for point in points:
-    #                     feat = QgsFeature()
-    #                     feat.setGeometry(point)
-    #                     prov.addFeatures([feat])
-    #                 new_layer.updateExtents()
-    #                 QgsMapLayerRegistry.instance().addMapLayers([new_layer])
-    #                 iface.legendInterface().setLayerVisible(new_layer, False)
-    #                 uf.addFields(new_layer, ['distance'], [QVariant.String])
-    #                 uf.updateField(new_layer, 'distance', '3')
-    #
-    #                 points2 = uf.getFeaturesDifference(layer, buffer_layer)
-    #                 new_layer2 = QgsVectorLayer('Point?crs=epsg:28992', layer_out, 'memory')
-    #                 prov2 = new_layer2.dataProvider()
-    #                 for point in points2:
-    #                     feat = QgsFeature()
-    #                     feat.setGeometry(point)
-    #                     prov2.addFeatures([feat])
-    #                 new_layer2.updateExtents()
-    #                 QgsMapLayerRegistry.instance().addMapLayers([new_layer2])
-    #                 iface.legendInterface().setLayerVisible(new_layer2, False)
-    #                 uf.addFields(new_layer2, ['distance'], [QVariant.String])
-    #                 uf.updateField(new_layer2, 'distance', '3')
 
 
     # picking
@@ -624,23 +571,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             self.canvas.refresh()
 
+
     # Displaying information
-
-    # def show_scen_details1(self,item):
-    #     if str(item.text()) == "Bomb Threat":
-    #         values = ["11:34","Bomb Threat","Rotterdam Centraal","3"]
-    #         for i, item in enumerate(values):
-    #             # i is the table row, items must be added as QTableWidgetItems
-    #             self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
-    #
-    # def show_scen_details2(self,item):
-    #     # if str(item.text()) == "Shooting":
-    #         values = ["11:55","Shooting","Lijnbaan 5, Rotterdam","5"]
-    #         for i, item in enumerate(values):
-    #             # i is the table row, items must be added as QTableWidgetItems
-    #             self.scen_details.setItem(i, 0, QtGui.QTableWidgetItem(unicode(item)))
-
-
     def to_evac_table(self):
         tent_values = self.evac_feat.attributes()
         indices = [2,3,7,8,9]
@@ -778,6 +710,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def saveMap(self):
         filename = 'C:/Users/' + os.getenv('USERNAME') + '/Desktop/Evacu8_log.png'
+        self.showSelected()
         if filename != '':
             self.canvas.saveAsImage(filename, None, "PNG")
 
