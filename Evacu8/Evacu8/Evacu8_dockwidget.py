@@ -702,7 +702,8 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.refreshCanvas(uf.getLegendLayerByName(self.iface, "Done"))
 
         # Store Selected Routes
-        if not (uf.getLegendLayerByName(self.iface, "Selected Routes")):
+        lay1 = uf.getLegendLayerByName(self.iface, "Selected Routes")
+        if not (lay1):
             selected = QgsVectorLayer('LINESTRING?crs=epsg:28992', 'Selected Routes', 'memory')
             QgsMapLayerRegistry.instance().addMapLayers([selected])
             style = "style_blue_routes.qml"
@@ -717,6 +718,9 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         for feat in feats:
             prov.addFeatures([feat])
         self.refreshCanvas(uf.getLegendLayerByName(self.iface, "Selected Routes"))
+
+        uf.addFields(lay1, ['number'], [QVariant.Int])
+        uf.updateField(lay1, 'number', 'rand(1,100)')
 
         # Lower capacity of shelter
         layer = uf.getLegendLayerByName(self.iface, "Shelters" )
