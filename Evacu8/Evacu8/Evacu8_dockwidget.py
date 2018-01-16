@@ -150,6 +150,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     ##Functions##
+
     #Open Scenario
     def openScenario(self, filename=""):
         self.iface.addProject(unicode(self.plugin_dir+"/data/Evacu8_dataset_new.qgs"))
@@ -159,8 +160,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.scen_info.insertHtml(self.input_template)
         self.buildings.clear()
         self.log.clear()
-
-
 
     # Attack Point
     def enterPoi(self):
@@ -201,7 +200,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Add the layer to the Layers panel
             QgsMapLayerRegistry.instance().addMapLayers([layer])
 
-
+    # Add distance from point to Attack Point as attribute
     def distance(self):
         layers = ["POI_Evacu8"]
         for layer in layers:
@@ -219,7 +218,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 vl.changeAttributeValue(feat.id(), index, m)
             vl.commitChanges()
 
-    # DUPLICATE POI LAYER
+    # Duplicate POI layer
     def dup_layer(self, crs, names):
         for name in names:
             layer = uf.getLegendLayerByName(self.iface, "POI_Evacu8")
@@ -234,7 +233,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             mem_layer_data.addFeatures(feats)
             QgsMapLayerRegistry.instance().addMapLayer(mem_layer)
 
-    # LOAD STYLE
+    # Load style
     def load_style(self, names, styles):
         for name, style in zip(names, styles):
             layer = uf.getLegendLayerByName(self.iface, name)
@@ -242,7 +241,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             layer.loadNamedStyle(qml_path)
             layer.triggerRepaint()
 
-    # SELECT AND DELETE
+    # Select and delete
     def intersectANDdelete(self):
         lay1 = uf.getLegendLayerByName(self.iface, "Perimeter")
         lay2 = uf.getLegendLayerByName(self.iface, "Shelters")
@@ -263,7 +262,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 lay3.deleteFeature(feat.id())
             lay3.commitChanges()
 
-    # buffer functions
+    # Get inserted buffer
     def getBufferCutoff(self):
         buffer = self.buff_area.text()
         if uf.isNumeric(buffer):
@@ -271,6 +270,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             return 0
 
+    # Make buffer layer
     def calculateBuffer(self):
         layer = uf.getLegendLayerByName(self.iface, "Attack Point")
         origins = layer.getFeatures()
@@ -286,7 +286,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                     buffers[point.id()] = geom.buffer(cutoff_distance,12).asPolygon()
                 # store the buffer results in temporary layer called "Perimeter"
                 buffer_layer = uf.getLegendLayerByName(self.iface, "Perimeter")
-                # create one if it doesn't exist
+                # Create one if it doesn't exist
                 if not buffer_layer:
                     attribs = ['id', 'distance']
                     types = [QtCore.QVariant.String, QtCore.QVariant.Double]
@@ -296,13 +296,13 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                     symbols = buffer_layer.rendererV2().symbols()
                     symbol = symbols[0]
                     symbol.setColor(QColor.fromRgb(220, 220, 0))
-                # insert buffer polygons
+                # Insert buffer polygons
                 geoms = []
                 values = []
                 for buffer in buffers.iteritems():
-                    # each buffer has an id and a geometry
+                    # Each buffer has an id and a geometry
                     geoms.append(buffer[1])
-                    # in the case of values, it expects a list of multiple values in each item - list of lists
+                    # In the case of values, it expects a list of multiple values in each item - list of lists
                     values.append([buffer[0],cutoff_distance])
                 uf.insertTempFeatures(buffer_layer, geoms, values)
                 self.refreshCanvas(buffer_layer)
@@ -320,7 +320,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
                 rlayer.renderer().setOpacity(0.5)  # 0.5 = 50%; 0.1 = 90%...
                 rlayer.triggerRepaint()
 
-                #jump to tab 2
+                # Jump to tab 2
                 self.tabs.setTabEnabled(1, True)
                 self.tabs.setCurrentIndex(1)
                 self.scrollArea.verticalScrollBar().setValue(0)
@@ -400,7 +400,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
 
-    # picking
+    # Picking to_evac buildings and shelters
     def enterEvac(self):
         self.canvas.setMapTool(self.emitEvac)
 
@@ -439,6 +439,28 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         return min_layer, min_feat
 
+    def enterShel(self):
+        self.shortestRouteButton.setEnabled(False)
+        routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
+        if routes_layer:
+            QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
+        if self.shel_layer:
+            self.shel_layer.deselect(self.shel_feat.id())
+        lineLayer = uf.getLegendLayerByName(iface, "road_net")
+        lineLayer.deselect(self.shelId)
+        self.canvas.setMapTool(self.emitShel)
+
+    def getShel(self, shel):
+        self.canvas.unsetMapTool(self.emitShel)
+
+        if shel:
+            self.shel = QgsPoint(shel)
+            self.shel_layer, self.shel_feat = self.select(self.shel)
+            self.shelter_table()
+        if self.evac and self.shel:
+            self.shortestRouteButton.setEnabled(True)
+
+    # Clear selection of to_evac and shelters
     def deleteEvac(self):
         routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
         if routes_layer:
@@ -463,30 +485,7 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.warning_msg.setVisible(False)
         self.big_button.setEnabled(False)
 
-
-    def enterShel(self):
-        self.shortestRouteButton.setEnabled(False)
-        routes_layer = uf.getLegendLayerByName(self.iface, "Routes")
-        if routes_layer:
-            QgsMapLayerRegistry.instance().removeMapLayer(routes_layer.id())
-        if self.shel_layer:
-            self.shel_layer.deselect(self.shel_feat.id())
-        lineLayer = uf.getLegendLayerByName(iface, "road_net")
-        lineLayer.deselect(self.shelId)
-        self.canvas.setMapTool(self.emitShel)
-
-    def getShel(self, shel):
-        self.canvas.unsetMapTool(self.emitShel)
-
-        if shel:
-            self.shel = QgsPoint(shel)
-            self.shel_layer, self.shel_feat = self.select(self.shel)
-            self.shelter_table()
-        if self.evac and self.shel:
-            self.shortestRouteButton.setEnabled(True)
-
-
-    # route functions
+    # Route functions
     def getNetwork(self):
         roads_layer = uf.getLegendLayerByName(self.iface, "road_net")
         if roads_layer:
@@ -564,15 +563,14 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             # Set ROUTE text color Red
             self.shelter_info.item(4, 0).setTextColor(QColor(255, 0, 0))
 
-    # after adding features to layers needs a refresh (sometimes)
+    # After adding features to layers, needs a refresh (sometimes)
     def refreshCanvas(self, layer):
         if self.canvas.isCachingEnabled():
             layer.setCacheImage(None)
         else:
             self.canvas.refresh()
 
-
-    # Displaying information
+    # Displaying POI information
     def to_evac_table(self):
         tent_values = self.evac_feat.attributes()
         indices = [2,3,7,8,9]
@@ -597,7 +595,6 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.warning_msg.setVisible(True)
         else:
             self.warning_msg.setVisible(False)
-
 
     # Open the wiki
     def open_wiki(self):
@@ -692,32 +689,38 @@ class Evacu8DockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Clear selections to start picking new targets
         self.deleteEvac()
 
+    # Save the log to desktop
     def saveLog(self):
         log_text = self.log.toPlainText()
         path = 'C:/Users/'+os.getenv('USERNAME')+'/Desktop/Evacu8_log.txt'
         with open(path,"w") as fh:
             fh.write("%s" %(log_text))
 
+    # Show all the chosen routes on the map
     def showSelected(self):
         selected = uf.getLegendLayerByName(self.iface, "Selected Routes")
         if selected:
             iface.legendInterface().setLayerVisible(selected, True)
 
+    # Hide all the chosen routes on the map
     def hideSelected(self):
         selected = uf.getLegendLayerByName(self.iface, "Selected Routes")
         if selected:
             iface.legendInterface().setLayerVisible(selected, False)
 
+    # Save the shown canvas to desktop
     def saveMap(self):
         filename = 'C:/Users/' + os.getenv('USERNAME') + '/Desktop/Evacu8_log.png'
         self.showSelected()
         if filename != '':
             self.canvas.saveAsImage(filename, None, "PNG")
 
+    # Show "saved to desktop" message for 2 seconds
     def timerMessage(self):
         self.saved_msg.setVisible(True)
         QTimer.singleShot(2000, lambda: (self.saved_msg.setVisible(False)))
 
+# Class for drawing polygons
 class PolyMapTool(QgsMapToolEmitPoint):
 
     def __init__(self, canvas):
